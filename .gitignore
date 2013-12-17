@@ -3,3 +3,4 @@
 .project
 
 /vendor/
+/test_db.sq3

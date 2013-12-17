@@ -18,3 +18,17 @@ $persister = new ConnectionPersister($connection);
 
 $persister->persist($loader->load());
 ```
+
+You can also load fixtures from the command line. There is a Symfony Console Application example in
+the `bin` folder. In order to run the example you will need to create a SQLite database with the
+following command.
+
+```bash
+$ sqlite3 test_db.sq3 < data/database.sql
+```
+
+Run the Symfony Console Command.
+
+```bash
+$ ./bin/cli dbal:fixture:load data/fixture.yml
+```

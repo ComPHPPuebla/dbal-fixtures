@@ -13,7 +13,8 @@
         "php": ">=5.4.0",
         "doctrine/dbal": "2.4.*",
         "zendframework/zend-config": "2.2.*",
-        "mustangostang/spyc": "0.5.*"
+        "mustangostang/spyc": "0.5.*",
+        "symfony/console": "2.4.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
@@ -24,5 +25,16 @@
         "psr-0": {
             "ComPHPPuebla": "src"
         }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "chmod u+x bin/cli"
+        ],
+        "post-update-cmd": [
+            "chmod u+x bin/cli"
+        ]
     }
 }
