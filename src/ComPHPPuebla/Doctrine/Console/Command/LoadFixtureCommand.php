@@ -17,6 +17,7 @@ use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Input\InputArgument;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ConnectionPersister;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Loader\YamlLoader;
+use \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser;
 use \InvalidArgumentException;
 
 /**
@@ -50,7 +51,7 @@ HELP
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $connection = $this->getHelper('db')->getConnection();
-        $persister = new ConnectionPersister($connection);
+        $persister = new ConnectionPersister($connection, new ForeignKeyParser());
 
         $path = $input->getArgument('file');
         $fileName = realpath($path);

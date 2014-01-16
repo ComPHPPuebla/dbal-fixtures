@@ -1,6 +1,11 @@
+# IDE
 .settings/
 .buildpath
 .project
 
+# Composer
 /vendor/
+/bin/phpunit
+
+# Examples
 /test_db.sq3

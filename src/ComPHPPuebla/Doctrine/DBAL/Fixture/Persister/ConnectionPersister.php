@@ -11,24 +11,41 @@ class ConnectionPersister implements Persister
     protected $connection;
 
     /**
-     * @param \Doctrine\DBAL\Connection $connection
+     * @var ForeignKeyParser
      */
-    public function __construct(Connection $connection)
+    protected $parser;
+
+    /**
+     * @param Connection $connection
+     * @param ForeignKeyParser $parser
+     */
+    public function __construct(Connection $connection, ForeignKeyParser $parser)
     {
         $this->connection = $connection;
+        $this->parser = $parser;
     }
 
     /**
      * Perform insert statements
      *
+     * @param array $fixtures
+     */
+    public function persist(array $fixtures)
+    {
+        foreach ($fixtures as $tableName => $rows) {
+            $this->insertTableRows($tableName, $rows);
+        }
+    }
+
+    /**
+     * @param string $tableName
      * @param array $rows
      */
-    public function persist(array $rows)
+    protected function insertTableRows($tableName, array $rows)
     {
-        foreach ($rows as $tableName => $row) {
-            foreach ($row as $rowKey => $values) {
-                $this->connection->insert($tableName, $values);
-            }
+        foreach ($rows as $rowKey => $values) {
+            $this->connection->insert($tableName, $this->parser->parse($values));
+            $this->parser->addReference($rowKey, $this->connection->lastInsertId());
         }
     }
 }
