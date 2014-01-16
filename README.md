@@ -7,8 +7,6 @@ use \Doctrine\DBAL\DriverManager;
 
 $params = [
     'path' => 'test.sq3',
-    'user' => 'test_user',
-    'password' => 't3st_us3!',
     'driver' => 'pdo_sqlite',
 ];
 $connection = DriverManager::getConnection($params);

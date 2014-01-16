@@ -21,6 +21,16 @@ class ConnectionPersisterIntegrationTest extends TestCase
      */
     protected $connection;
 
+    /**
+     * @var \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser
+     */
+    protected $parser;
+
+    /**
+     * @var int
+     */
+    protected $stationId;
+
     protected function setUp()
     {
         $this->path = __DIR__ . '/../../../../../../data/fixture.yml';
@@ -48,65 +58,36 @@ class ConnectionPersisterIntegrationTest extends TestCase
                     'created_at' => '2013-10-06 00:00:00',
                     'last_updated_at' => '2013-10-06 00:00:00',
                 ],
-                'station_3' => [
-                    'name' => 'GAS LA POBLANITA',
-                    'social_reason' => 'GASOLINERA LA POBLANITA SA CV',
-                    'address_line_1' => '2 PTE NO 1902',
-                    'address_line_2' => 'SAN ALEJANDRO',
-                    'location' => 'PUEBLA PUE',
-                    'latitude' => 19.05226,
-                    'longitude' => -98.21158,
-                    'created_at' => '2013-10-06 00:00:00',
-                    'last_updated_at' => '2013-10-06 00:00:00',
+            ],
+            'reviews' => [
+                'review_1' => [
+	               'comment' => 'El servicio es excelente',
+	               'stars' => 5,
+                   'station_id' => '@station_1',
                 ],
-                'station_4' => [
-                    'name' => 'GASOL ECOLOGIC POBLANO',
-                    'social_reason' => 'GASOL ECOLOGICO POBLANO SA CV',
-                    'address_line_1' => 'C 26 SUR NO  709',
-                    'address_line_2' => 'AZCARATE',
-                    'location' => 'PUEBLA PUE',
-                    'latitude' => 19.03348,
-                    'longitude' => -98.18496,
-                    'created_at' => '2013-10-06 00:00:00',
-                    'last_updated_at' => '2013-10-06 00:00:00',
-                ],
-                'station_5' => [
-                    'name' => 'GASOL LA CAMIONERA',
-                    'social_reason' => 'SERV LA CAMIONERA PUEBLA SA CV',
-                    'address_line_1' => 'BLVD NTE NO 4210',
-                    'address_line_2' => 'LAS CUARTILLAS',
-                    'location' => 'PUEBLA PUE',
-                    'latitude' => 19.07248,
-                    'longitude' => -98.2044,
-                    'created_at' => '2013-10-06 00:00:00',
-                    'last_updated_at' => '2013-10-06 00:00:00',
-                ],
-                'station_6' => [
-                    'name' => 'GASOL LOS ANGELES',
-                    'social_reason' => 'GASOLINERA LOS ANGELES SA CV',
-                    'address_line_1' => 'AV 16 DE SEPTIEMBRE NO 4322',
-                    'address_line_2' => 'HUEXOTITLA',
-                    'location' => 'PUEBLA PUE',
-                    'latitude' => 19.0265,
-                    'longitude' => -98.20896,
-                    'created_at' => '2013-10-06 00:00:00',
-                    'last_updated_at' => '2013-10-06 00:00:00',
+                'review_2' => [
+                    'comment' => 'El servicio es pésimo',
+                    'stars' => 1,
+                    'station_id' => '@station_1',
                 ],
             ],
         ];
+        $this->stationId = 1;
         $this->connection = $this->mock('\Doctrine\DBAL\Connection');
+        $this->parser = $this->mock('\ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser');
     }
 
     public function testCanPersistFixtures()
     {
         $this->expectsThatPersisterSavesTwoRecords();
+        $this->expectsThatPersisterGetTheTwoRecordsInsertedIds();
 
         $loader = new YamlLoader($this->path);
 
         $rows = $loader->load();
         $this->assertEquals($this->gasStations, $rows);
 
-        $persister = new ConnectionPersister($this->connection->new());
+        $persister = new ConnectionPersister($this->connection->new(), $this->parser->new());
         $persister->persist($rows);
     }
 
@@ -114,8 +95,22 @@ class ConnectionPersisterIntegrationTest extends TestCase
     {
         $station1 = $this->gasStations['stations']['station_1'];
         $station2 = $this->gasStations['stations']['station_2'];
+        $review1 = $this->gasStations['reviews']['review_1'];
+        $review1['station_id'] = $this->stationId;
+        $review2 = $this->gasStations['reviews']['review_2'];
+        $review2['station_id'] = $this->stationId;
 
-        $this->connection->insert('stations', $station1, null, $this->at(0))
-                         ->insert('stations', $station2, null, $this->at(1));
+        $this->connection->insert(['stations', $station1], null, $this->at(0))
+                         ->insert(['stations', $station2], null, $this->at(2))
+                         ->insert(['reviews', $review1], null, $this->at(4))
+                         ->insert(['reviews', $review2], null, $this->at(6));
+    }
+
+    protected function expectsThatPersisterGetTheTwoRecordsInsertedIds()
+    {
+        $this->connection->lastInsertId([], $this->stationId, $this->at(1));
+        $this->connection->lastInsertId([], 2, $this->at(3));
+        $this->connection->lastInsertId([], 1, $this->at(5));
+        $this->connection->lastInsertId([], 2, $this->at(7));
     }
 }

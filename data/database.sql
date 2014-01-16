@@ -14,4 +14,13 @@ CREATE TABLE stations (
     PRIMARY KEY(station_id)
 );
 
+CREATE TABLE reviews (
+    review_id INTEGER NOT NULL,
+    comment VARCHAR(500) NOT NULL,
+    stars INTEGER NOT NULL,
+    station_id INTEGER NOT NULL,
+    PRIMARY KEY(review_id),
+    FOREIGN KEY(station_id) REFERENCES station(station_id)
+);
+
 COMMIT;
