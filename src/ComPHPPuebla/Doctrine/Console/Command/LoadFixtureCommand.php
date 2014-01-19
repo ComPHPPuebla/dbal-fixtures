@@ -15,6 +15,7 @@ use \Symfony\Component\Console\Command\Command;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Input\InputArgument;
+use \Symfony\Component\Console\Input\InputOption;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ConnectionPersister;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Loader\YamlLoader;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser;
@@ -37,6 +38,9 @@ class LoadFixtureCommand extends Command
              ->setDefinition([
                  new InputArgument(
                      'file', InputArgument::REQUIRED, 'File path of YAML file to be loaded.'
+                 ),
+                 new InputOption(
+                     'quote', null, InputOption::VALUE_NONE, 'If present, column names will be quoted on insert.'
                  )
              ])
              ->setHelp(<<<HELP
@@ -51,7 +55,10 @@ HELP
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $connection = $this->getHelper('db')->getConnection();
-        $persister = new ConnectionPersister($connection, new ForeignKeyParser());
+
+        $quote = $input->hasOption('quote');
+
+        $persister = new ConnectionPersister($connection, new ForeignKeyParser(), $quote);
 
         $path = $input->getArgument('file');
         $fileName = realpath($path);

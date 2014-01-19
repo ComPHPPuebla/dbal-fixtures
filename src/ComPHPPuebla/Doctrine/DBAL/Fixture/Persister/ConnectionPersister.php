@@ -16,13 +16,20 @@ class ConnectionPersister implements Persister
     protected $parser;
 
     /**
-     * @param Connection $connection
-     * @param ForeignKeyParser $parser
+     * @var boolean
      */
-    public function __construct(Connection $connection, ForeignKeyParser $parser)
+    protected $quote;
+
+    /**
+     * @param Connection       $connection
+     * @param ForeignKeyParser $parser
+     * @param boolean          $qoute      false;
+     */
+    public function __construct(Connection $connection, ForeignKeyParser $parser, $quote = false)
     {
         $this->connection = $connection;
         $this->parser = $parser;
+        $this->quote = $quote;
     }
 
     /**
@@ -33,13 +40,36 @@ class ConnectionPersister implements Persister
     public function persist(array $fixtures)
     {
         foreach ($fixtures as $tableName => $rows) {
+            $rows = $this->quoteIdentifiers($rows);
             $this->insertTableRows($tableName, $rows);
         }
     }
 
     /**
+     * @param  array $rows
+     * @return array
+     */
+    protected function quoteIdentifiers(array $rows)
+    {
+        if (!$this->quote) {
+            return $rows;
+        }
+
+        $quotedRows = array_map(function($row) {
+            $quoted = [];
+            foreach ($row as $identifier => $value) {
+                $quoted[$this->connection->quoteIdentifier($identifier)] = $value;
+            }
+
+            return $quoted;
+        }, $rows);
+
+        return $quotedRows;
+    }
+
+    /**
      * @param string $tableName
-     * @param array $rows
+     * @param array  $rows
      */
     protected function insertTableRows($tableName, array $rows)
     {

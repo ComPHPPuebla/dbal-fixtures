@@ -61,8 +61,8 @@ class ConnectionPersisterIntegrationTest extends TestCase
             ],
             'reviews' => [
                 'review_1' => [
-	               'comment' => 'El servicio es excelente',
-	               'stars' => 5,
+                   'comment' => 'El servicio es excelente',
+                   'stars' => 5,
                    'station_id' => '@station_1',
                 ],
                 'review_2' => [

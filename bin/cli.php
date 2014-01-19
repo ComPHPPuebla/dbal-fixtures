@@ -23,7 +23,7 @@ use \ComPHPPuebla\Doctrine\Console\Command\LoadFixtureCommand;
  *
  * @author     LMV <montealegreluis@gmail.com>
  */
-$cli = new Application('DBAL Fixtures CLI', '0.1.1');
+$cli = new Application('DBAL Fixtures CLI', '0.1.2');
 $cli->setCatchExceptions(true);
 
 $connection = DriverManager::getConnection(require 'config/connection.config.php');
