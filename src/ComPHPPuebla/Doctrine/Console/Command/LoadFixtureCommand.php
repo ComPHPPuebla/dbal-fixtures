@@ -15,11 +15,11 @@ use \Symfony\Component\Console\Command\Command;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Input\InputArgument;
+use \Symfony\Component\Console\Input\InputOption;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ConnectionPersister;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Loader\YamlLoader;
 use \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser;
 use \InvalidArgumentException;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Load YAML fixtures in the configured database
@@ -40,7 +40,7 @@ class LoadFixtureCommand extends Command
                      'file', InputArgument::REQUIRED, 'File path of YAML file to be loaded.'
                  ),
                  new InputOption(
-                     'quote', 'q', InputOption::VALUE_NONE, 'If present, column names will be quoted on insert.'
+                     'quote', null, InputOption::VALUE_NONE, 'If present, column names will be quoted on insert.'
                  )
              ])
              ->setHelp(<<<HELP
