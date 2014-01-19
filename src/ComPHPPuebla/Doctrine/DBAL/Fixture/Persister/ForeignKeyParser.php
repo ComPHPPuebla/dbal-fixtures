@@ -18,7 +18,7 @@ class ForeignKeyParser
 
     /**
      * @param string $key
-     * @param int $id
+     * @param int    $id
      */
     public function addReference($key, $id)
     {
@@ -26,7 +26,7 @@ class ForeignKeyParser
     }
 
     /**
-     * @param array $values
+     * @param  array $values
      * @return array
      */
     public function parse(array $values)
