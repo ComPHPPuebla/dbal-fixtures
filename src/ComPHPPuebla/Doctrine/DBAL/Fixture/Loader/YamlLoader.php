@@ -1,7 +1,7 @@
 <?php
 namespace ComPHPPuebla\Doctrine\DBAL\Fixture\Loader;
 
-use \Zend\Config\Reader\Yaml as YamlReader;
+use Symfony\Component\Yaml\Parser;
 
 class YamlLoader implements Loader
 {
@@ -11,11 +11,11 @@ class YamlLoader implements Loader
     protected $path;
 
     /**
-     * @var \Zend\Config\Reader\Yaml
+     * @var \Symfony\Component\Yaml\Parser
      */
     protected $reader;
 
-    public function __construct($path, YamlReader $reader = null)
+    public function __construct($path, Parser $reader = null)
     {
         $this->path = $path;
         $this->reader = $reader;
@@ -24,9 +24,9 @@ class YamlLoader implements Loader
     public function load()
     {
         if (!$this->reader) {
-            $this->reader = new YamlReader(['Spyc','YAMLLoadString']);
+            $this->reader = new Parser();
         }
 
-        return $this->reader->fromFile($this->path);
+        return $this->reader->parse(file_get_contents($this->path));
     }
 }
