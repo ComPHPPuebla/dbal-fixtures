@@ -5,7 +5,7 @@ support for foreign keys using the `@` symbol.
 
 The following is an example of a fixture file.
 
-```
+```yaml
 stations:
     station_1:
         name: "CASMEN GASOL"
@@ -60,3 +60,10 @@ If you need to quote the column identifiers add the `--quote` option to the comm
 ```bash
 $ ./bin/cli dbal:fixture:load --quote data/fixture.yml
 ```
+
+## Changelog
+
+### 1.0.0 - 2014-10-08
+
+* Replace `Zend/Config` package with `Symfony\Yaml` ([#1](https://github.com/ComPHPPuebla/dbal-fixtures/pull/1))
+* Update Doctrine and Symfony packages to use `~2.4` version.

@@ -40,8 +40,8 @@ class YamlLoaderTest extends TestCase
 
     public function testCanLoadFixturesFile()
     {
-        $reader = $this->mock('\Zend\Config\Reader\Yaml')
-                       ->fromFile([$this->path], $this->gasStations, $this->once())
+        $reader = $this->mock('\Symfony\Component\Yaml\Parser')
+                       ->parse([file_get_contents($this->path)], $this->gasStations, $this->once())
                        ->new();
 
         $loader = new YamlLoader($this->path, $reader);
