@@ -23,7 +23,7 @@ class ForeignKeyParser
 
     /**
      * @param string $key
-     * @param int    $id
+     * @param int $id
      */
     public function addReference($key, $id)
     {
@@ -31,17 +31,58 @@ class ForeignKeyParser
     }
 
     /**
-     * @param  array $values
+     * @param array $values
      * @return array
      */
     public function parse(array $values)
     {
         foreach ($values as $column => $value) {
-            if ('@' === $value[0] && isset($this->references[substr($value, 1)])) {
-                $values[$column] = $this->references[substr($value, 1)];
-            }
+            $values = $this->parseKeyIfNeeded($values, $value, $column);
         }
+        return $values;
+    }
 
+    /**
+     * @param array $values
+     * @param string $value
+     * @param string $column
+     * @return array
+     */
+    private function parseKeyIfNeeded(array $values, $value, $column)
+    {
+        if ($this->isAReference($value) && $this->referenceExistsFor($value)) {
+            return $this->replaceReference($values, $value, $column);
+        }
+        return $values;
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    private function isAReference($value)
+    {
+        return '@' === $value[0];
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    private function referenceExistsFor($value)
+    {
+        return isset($this->references[substr($value, 1)]);
+    }
+
+    /**
+     * @param array $values
+     * @param string $value
+     * @param string $column
+     * @return array
+     */
+    private function replaceReference(array $values, $value, $column)
+    {
+        $values[$column] = $this->references[substr($value, 1)];
         return $values;
     }
 }

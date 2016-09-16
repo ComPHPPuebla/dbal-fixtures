@@ -8,22 +8,25 @@ namespace ComPHPPuebla\DBAL\Fixture\Loader;
 
 use Symfony\Component\Yaml\Parser;
 
+/**
+ * Reads a .yml file and converts it to an associative array
+ */
 class YamlLoader implements Loader
 {
     /** @var string */
     protected $path;
 
     /** @var Parser */
-    protected $reader;
+    protected $parser;
 
     /**
      * @param string $path
-     * @param Parser|null $reader
+     * @param Parser|null $parser
      */
-    public function __construct($path, Parser $reader = null)
+    public function __construct($path, Parser $parser = null)
     {
         $this->path = $path;
-        $this->reader = $reader ?: new Parser();
+        $this->parser = $parser ?: new Parser();
     }
 
     /**
@@ -31,6 +34,6 @@ class YamlLoader implements Loader
      */
     public function load()
     {
-        return $this->reader->parse(file_get_contents($this->path));
+        return $this->parser->parse(file_get_contents($this->path));
     }
 }

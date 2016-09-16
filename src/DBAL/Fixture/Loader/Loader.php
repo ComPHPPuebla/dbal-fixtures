@@ -6,6 +6,9 @@
  */
 namespace ComPHPPuebla\DBAL\Fixture\Loader;
 
+/**
+ * Reads a file and converts it into array so that it can be sent to a database
+ */
 interface Loader
 {
     /**

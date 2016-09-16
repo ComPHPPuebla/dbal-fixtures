@@ -6,6 +6,9 @@
  */
 namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
+/**
+ * Insert the given rows to a database
+ */
 interface Persister
 {
     /**
