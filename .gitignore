@@ -1,11 +1,7 @@
-# IDE
-.settings/
-.buildpath
-.project
-
 # Composer
 /vendor/
 /bin/phpunit
+/bin/doctrine-dbal
 
 # Examples
 /test_db.sq3
