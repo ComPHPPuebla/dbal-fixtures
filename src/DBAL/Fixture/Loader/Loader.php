@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Doctrine\DBAL\Fixture\Loader;
+namespace ComPHPPuebla\DBAL\Fixture\Loader;
 
 interface Loader
 {

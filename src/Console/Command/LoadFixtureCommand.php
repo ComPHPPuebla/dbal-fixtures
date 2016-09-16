@@ -9,7 +9,7 @@
  *
  * @author     LMV <montealegreluis@gmail.com>
  */
-namespace ComPHPPuebla\Doctrine\Console\Command;
+namespace ComPHPPuebla\Console\Command;
 
 use \Symfony\Component\Console\Command\Command;
 use \Symfony\Component\Console\Input\InputInterface;

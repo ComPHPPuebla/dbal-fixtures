@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Doctrine\DBAL\Fixture\Persister;
+namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
 use \Xpmock\TestCase;
 
@@ -18,7 +18,7 @@ class ConnectionPersisterTest extends TestCase
     protected function setUp()
     {
         $this->connection = $this->mock('\Doctrine\DBAL\Connection');
-        $this->parser = $this->mock('\ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser');
+        $this->parser = $this->mock('\ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser');
     }
 
     public function testCanPersistFixtures()

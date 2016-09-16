@@ -1,8 +1,8 @@
 <?php
-namespace ComPHPPuebla\Doctrine\DBAL\Fixture\Persister;
+namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
 use \Xpmock\TestCase;
-use ComPHPPuebla\Doctrine\DBAL\Fixture\Loader\YamlLoader;
+use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
 
 class ConnectionPersisterIntegrationTest extends TestCase
 {
@@ -33,7 +33,7 @@ class ConnectionPersisterIntegrationTest extends TestCase
 
     protected function setUp()
     {
-        $this->path = __DIR__ . '/../../../../../../data/fixture.yml';
+        $this->path = __DIR__ . '/../../../../data/fixture.yml';
         $this->gasStations = [
             'stations' => [
                 'station_1' => [
@@ -74,7 +74,7 @@ class ConnectionPersisterIntegrationTest extends TestCase
         ];
         $this->stationId = 1;
         $this->connection = $this->mock('\Doctrine\DBAL\Connection');
-        $this->parser = $this->mock('\ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser');
+        $this->parser = $this->mock('\ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser');
     }
 
     public function testCanPersistFixtures()

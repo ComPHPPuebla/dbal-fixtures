@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Doctrine\DBAL\Fixture\Loader;
+namespace ComPHPPuebla\DBAL\Fixture\Loader;
 
 use \Xpmock\TestCase;
 
@@ -20,7 +20,7 @@ class YamlLoaderTest extends TestCase
      */
     protected function setUp()
     {
-        $this->path = __DIR__ . '/../../../../../../../data/fixture.yml';
+        $this->path = __DIR__ . '/../../../../../data/fixture.yml';
         $this->gasStations = [
             'stations' => [
                 'station_1' => [

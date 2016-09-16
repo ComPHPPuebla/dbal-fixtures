@@ -5,7 +5,7 @@
     "authors": [
         {
             "name": "Luis Montealegre",
-            "email": "luis.montealegre@mandragora-web-systems.com",
+            "email": "montealegreluis@gmail.com",
             "role": "developer"
         }
     ],
@@ -21,8 +21,8 @@
         "whatthejeff/nyancat-phpunit-resultprinter": "~1.1"
     },
     "autoload": {
-        "psr-0": {
-            "ComPHPPuebla": "src"
+        "psr-4": {
+            "ComPHPPuebla\\": "src"
         }
     },
     "config": {

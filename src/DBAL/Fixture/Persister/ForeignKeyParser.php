@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Doctrine\DBAL\Fixture\Persister;
+namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
 class ForeignKeyParser
 {
