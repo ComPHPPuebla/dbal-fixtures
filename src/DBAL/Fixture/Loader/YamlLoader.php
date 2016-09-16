@@ -10,14 +10,10 @@ use Symfony\Component\Yaml\Parser;
 
 class YamlLoader implements Loader
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $path;
 
-    /**
-     * @var \Symfony\Component\Yaml\Parser
-     */
+    /** @var Parser */
     protected $reader;
 
     public function __construct($path, Parser $reader = null)

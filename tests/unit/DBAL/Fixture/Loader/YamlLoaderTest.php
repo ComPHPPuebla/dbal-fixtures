@@ -6,18 +6,15 @@
  */
 namespace ComPHPPuebla\DBAL\Fixture\Loader;
 
-use Xpmock\TestCase;
+use Symfony\Component\Yaml\Parser;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class YamlLoaderTest extends TestCase
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $path;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $gasStations;
 
     /**
@@ -43,13 +40,15 @@ class YamlLoaderTest extends TestCase
         ];
     }
 
-    public function testCanLoadFixturesFile()
+    /** @test */
+    public function it_loads_fixtures_file()
     {
-        $reader = $this->mock('\Symfony\Component\Yaml\Parser')
-                       ->parse([file_get_contents($this->path)], $this->gasStations, $this->once())
-                       ->new();
-
-        $loader = new YamlLoader($this->path, $reader);
+        $reader = $this->prophesize(Parser::class);
+        $reader
+            ->parse(file_get_contents($this->path))
+            ->willReturn($this->gasStations)
+        ;
+        $loader = new YamlLoader($this->path, $reader->reveal());
 
         $this->assertEquals($this->gasStations, $loader->load());
     }

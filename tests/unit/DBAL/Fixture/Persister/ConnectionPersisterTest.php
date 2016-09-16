@@ -6,27 +6,25 @@
  */
 namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
-use Xpmock\TestCase;
+use Doctrine\DBAL\Connection;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class ConnectionPersisterTest extends TestCase
 {
-    /**
-     * @var \Doctrine\DBAL\Connection
-     */
+    /** Connection */
     protected $connection;
 
-    /**
-     * @var \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser
-     */
+    /** @var ForeignKeyParser */
     protected $parser;
 
     protected function setUp()
     {
-        $this->connection = $this->mock('\Doctrine\DBAL\Connection');
-        $this->parser = $this->mock('\ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser');
+        $this->connection = $this->prophesize(Connection::class);
+        $this->parser = $this->prophesize(ForeignKeyParser::class);
     }
 
-    public function testCanPersistFixtures()
+    /** @test */
+    public function it_persists_fixtures()
     {
         $gasStations = [
             'stations' => [
@@ -55,14 +53,16 @@ class ConnectionPersisterTest extends TestCase
             ]
         ];
 
-        $this->expectsThatPersisterSavesTwoRecords();
-        $this->expectsThatPersisterGetTheTwoRecordsInsertedIds();
+        $this->expectsConnectionSavesTwoRecords();
+        $this->connectionWillReturnTwoIds();
 
-        $persister = new ConnectionPersister($this->connection->new(), $this->parser->new());
+        $persister = new ConnectionPersister(
+            $this->connection->reveal(), new ForeignKeyParser()
+        );
         $persister->persist($gasStations);
     }
 
-    protected function expectsThatPersisterSavesTwoRecords()
+    protected function expectsConnectionSavesTwoRecords()
     {
         $station1 = [
             'name' => 'CASMEN GASOL',
@@ -87,17 +87,18 @@ class ConnectionPersisterTest extends TestCase
             'last_updated_at' => '2013-10-06 00:00:00',
         ];
 
-        $this->connection->insert(['stations', $station1], null, $this->at(0))
-                         ->insert(['stations', $station2], null, $this->at(2));
+        $this->connection->insert('stations', $station1)->shouldBeCalled();
+        $this->connection->insert('stations', $station2)->shouldBeCalled();
     }
 
-    protected function expectsThatPersisterGetTheTwoRecordsInsertedIds()
+    protected function connectionWillReturnTwoIds()
     {
-        $this->connection->lastInsertId([], 1, $this->at(1));
-        $this->connection->lastInsertId([], 2, $this->at(3));
+        $this->connection->lastInsertId()->willReturn(1);
+        $this->connection->lastInsertId()->willReturn(2);
     }
 
-    public function testCanQuoteIdentifiers()
+    /** @test */
+    public function it_quotes_identifiers()
     {
         $gasStation = [
             'stations' => [
@@ -108,34 +109,36 @@ class ConnectionPersisterTest extends TestCase
             ]
         ];
 
-        $this->expectsThatPersisterSavesOneRecord();
-        $this->expectsThatPersisterGetTheRecordsInsertedId();
-        $this->expectsThatConnectionQuotesAllColumnIdentifiers();
+        $this->expectsConnectionSavesOneRecord();
+        $this->connectionWillReturnOneId();
+        $this->connectionWillQuoteTwoIdentifiers();
 
         $persister = new ConnectionPersister(
-            $this->connection->new(), $this->parser->new(), $quote = true
+            $this->connection->reveal(),
+            new ForeignKeyParser(),
+            $quote = true
         );
         $persister->persist($gasStation);
     }
 
-    protected function expectsThatPersisterSavesOneRecord()
+    protected function expectsConnectionSavesOneRecord()
     {
         $station = [
             '`name`' => 'CASMEN GASOL',
             '`social_reason`' => 'CASMEN SA CV',
         ];
 
-        $this->connection->insert(['stations', $station], null, $this->at(2));
+        $this->connection->insert('stations', $station)->shouldBeCalled();
     }
 
-    protected function expectsThatPersisterGetTheRecordsInsertedId()
+    protected function connectionWillReturnOneId()
     {
-        $this->connection->lastInsertId([], 1, $this->at(3));
+        $this->connection->lastInsertId()->willReturn(1);
     }
 
-    protected function expectsThatConnectionQuotesAllColumnIdentifiers()
+    protected function connectionWillQuoteTwoIdentifiers()
     {
-        $this->connection->quoteIdentifier(['name'], '`name`', $this->at(0));
-        $this->connection->quoteIdentifier(['social_reason'], '`social_reason`', $this->at(1));
+        $this->connection->quoteIdentifier('name')->willReturn('`name`');
+        $this->connection->quoteIdentifier('social_reason')->willReturn('`social_reason`');
     }
 }

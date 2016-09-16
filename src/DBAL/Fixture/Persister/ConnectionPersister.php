@@ -28,10 +28,13 @@ class ConnectionPersister implements Persister
     /**
      * @param Connection       $connection
      * @param ForeignKeyParser $parser
-     * @param boolean          $qoute      false;
+     * @param boolean          $quote      false
      */
-    public function __construct(Connection $connection, ForeignKeyParser $parser, $quote = false)
-    {
+    public function __construct(
+        Connection $connection,
+        ForeignKeyParser $parser,
+        $quote = false
+    ) {
         $this->connection = $connection;
         $this->parser = $parser;
         $this->quote = $quote;

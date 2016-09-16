@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
-use Xpmock\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class ForeignKeyParserTest extends TestCase
 {
@@ -25,11 +25,12 @@ class ForeignKeyParserTest extends TestCase
         ];
     }
 
-    public function testCanParseForeign()
+    /** @test */
+    public function it_parses_foreign_keys()
     {
         $parser = new ForeignKeyParser();
-
         $parser->addReference('station_1', 1);
+
         $parsedValues = $parser->parse($this->reviews['reviews']['review_1']);
 
         $this->assertEquals(1, $parsedValues['station_id']);

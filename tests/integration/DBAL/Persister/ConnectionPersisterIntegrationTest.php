@@ -6,34 +6,25 @@
  */
 namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
-use Xpmock\TestCase;
 use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
+use Doctrine\DBAL\Connection;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class ConnectionPersisterIntegrationTest extends TestCase
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $path;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $gasStations;
 
-    /**
-     * @var \Doctrine\DBAL\Connection
-     */
+    /** @var Connection */
     protected $connection;
 
-    /**
-     * @var \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser
-     */
+    /** @var ForeignKeyParser */
     protected $parser;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $stationId;
 
     protected function setUp()
@@ -78,25 +69,24 @@ class ConnectionPersisterIntegrationTest extends TestCase
             ],
         ];
         $this->stationId = 1;
-        $this->connection = $this->mock('\Doctrine\DBAL\Connection');
-        $this->parser = $this->mock('\ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser');
+        $this->connection = $this->prophesize(Connection::class);
     }
 
-    public function testCanPersistFixtures()
+    /** @test */
+    public function it_persists_fixtures_with_references()
     {
-        $this->expectsThatPersisterSavesTwoRecords();
-        $this->expectsThatPersisterGetTheTwoRecordsInsertedIds();
+        $this->expectConnectionSavesFourRecords();
+        $this->connectionWillReturnFourInsertedIds();
+        $persister = new ConnectionPersister(
+            $this->connection->reveal(), new ForeignKeyParser()
+        );
 
-        $loader = new YamlLoader($this->path);
-
-        $rows = $loader->load();
+        $rows = (new YamlLoader($this->path))->load();
         $this->assertEquals($this->gasStations, $rows);
-
-        $persister = new ConnectionPersister($this->connection->new(), $this->parser->new());
         $persister->persist($rows);
     }
 
-    protected function expectsThatPersisterSavesTwoRecords()
+    private function expectConnectionSavesFourRecords()
     {
         $station1 = $this->gasStations['stations']['station_1'];
         $station2 = $this->gasStations['stations']['station_2'];
@@ -105,17 +95,19 @@ class ConnectionPersisterIntegrationTest extends TestCase
         $review2 = $this->gasStations['reviews']['review_2'];
         $review2['station_id'] = $this->stationId;
 
-        $this->connection->insert(['stations', $station1], null, $this->at(0))
-                         ->insert(['stations', $station2], null, $this->at(2))
-                         ->insert(['reviews', $review1], null, $this->at(4))
-                         ->insert(['reviews', $review2], null, $this->at(6));
+        $this->connection->insert('stations', $station1)->shouldBeCalled();
+        $this->connection->insert('stations', $station2)->shouldBeCalled();
+        $this->connection->insert('reviews', $review1)->shouldBeCalled();
+        $this->connection->insert('reviews', $review2)->shouldBeCalled();
     }
 
-    protected function expectsThatPersisterGetTheTwoRecordsInsertedIds()
+    private function connectionWillReturnFourInsertedIds()
     {
-        $this->connection->lastInsertId([], $this->stationId, $this->at(1));
-        $this->connection->lastInsertId([], 2, $this->at(3));
-        $this->connection->lastInsertId([], 1, $this->at(5));
-        $this->connection->lastInsertId([], 2, $this->at(7));
+        $this->connection->lastInsertId()->willReturn(
+            $this->stationId,
+            2,
+            1,
+            2
+        );
     }
 }
