@@ -10,34 +10,22 @@ use Doctrine\DBAL\Connection;
 
 class ConnectionPersister implements Persister
 {
-    /**
-     * @var \Doctrine\DBAL\Connection
-     */
+    /** @var Connection */
     protected $connection;
 
-    /**
-     * @var ForeignKeyParser
-     */
+    /** @var ForeignKeyParser */
     protected $parser;
 
     /**
-     * @var boolean
-     */
-    protected $quote;
-
-    /**
-     * @param Connection       $connection
+     * @param Connection $connection
      * @param ForeignKeyParser $parser
-     * @param boolean          $quote      false
      */
     public function __construct(
         Connection $connection,
-        ForeignKeyParser $parser,
-        $quote = false
+        ForeignKeyParser $parser = null
     ) {
         $this->connection = $connection;
-        $this->parser = $parser;
-        $this->quote = $quote;
+        $this->parser = $parser ?: new ForeignKeyParser();
     }
 
     /**
@@ -48,8 +36,7 @@ class ConnectionPersister implements Persister
     public function persist(array $fixtures)
     {
         foreach ($fixtures as $tableName => $rows) {
-            $rows = $this->quoteIdentifiers($rows);
-            $this->insertTableRows($tableName, $rows);
+            $this->insertTableRows($tableName, $this->quoteIdentifiers($rows));
         }
     }
 
@@ -59,11 +46,7 @@ class ConnectionPersister implements Persister
      */
     protected function quoteIdentifiers(array $rows)
     {
-        if (!$this->quote) {
-            return $rows;
-        }
-
-        $quotedRows = array_map(function($row) {
+        $quotedRows = array_map(function ($row) {
             $quoted = [];
             foreach ($row as $identifier => $value) {
                 $quoted[$this->connection->quoteIdentifier($identifier)] = $value;
@@ -77,7 +60,7 @@ class ConnectionPersister implements Persister
 
     /**
      * @param string $tableName
-     * @param array  $rows
+     * @param array $rows
      */
     protected function insertTableRows($tableName, array $rows)
     {

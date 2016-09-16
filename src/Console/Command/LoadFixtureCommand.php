@@ -10,10 +10,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use ComPHPPuebla\DBAL\Fixture\Persister\ConnectionPersister;
 use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
-use ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser;
 use InvalidArgumentException;
 
 /**
@@ -32,9 +30,6 @@ class LoadFixtureCommand extends Command
                  new InputArgument(
                      'file', InputArgument::REQUIRED, 'File path of YAML file to be loaded.'
                  ),
-                 new InputOption(
-                     'quote', null, InputOption::VALUE_NONE, 'If present, column names will be quoted on insert.'
-                 )
              ])
              ->setHelp(<<<HELP
 The <info>dbal:fixtures:create</info> loads a fixture in the configured database.
@@ -49,9 +44,7 @@ HELP
     {
         $connection = $this->getHelper('db')->getConnection();
 
-        $quote = $input->hasOption('quote');
-
-        $persister = new ConnectionPersister($connection, new ForeignKeyParser(), $quote);
+        $persister = new ConnectionPersister($connection);
 
         $path = $input->getArgument('file');
         $fileName = realpath($path);

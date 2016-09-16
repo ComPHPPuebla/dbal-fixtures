@@ -21,9 +21,6 @@ class ConnectionPersisterIntegrationTest extends TestCase
     /** @var Connection */
     protected $connection;
 
-    /** @var ForeignKeyParser */
-    protected $parser;
-
     /** @var int */
     protected $stationId;
 
@@ -33,38 +30,38 @@ class ConnectionPersisterIntegrationTest extends TestCase
         $this->gasStations = [
             'stations' => [
                 'station_1' => [
-                    'name' => 'CASMEN GASOL',
-                    'social_reason' => 'CASMEN SA CV',
-                    'address_line_1' => '23 PTE NO 711',
-                    'address_line_2' => 'EL CARMEN',
-                    'location' => 'PUEBLA PUE',
-                    'latitude' => 19.03817,
-                    'longitude' => -98.20737,
-                    'created_at' => '2013-10-06 00:00:00',
-                    'last_updated_at' => '2013-10-06 00:00:00',
+                    '`name`' => 'CASMEN GASOL',
+                    '`social_reason`' => 'CASMEN SA CV',
+                    '`address_line_1`' => '23 PTE NO 711',
+                    '`address_line_2`' => 'EL CARMEN',
+                    '`location`' => 'PUEBLA PUE',
+                    '`latitude`' => 19.03817,
+                    '`longitude`' => -98.20737,
+                    '`created_at`' => '2013-10-06 00:00:00',
+                    '`last_updated_at`' => '2013-10-06 00:00:00',
                 ],
                 'station_2' => [
-                    'name' => 'COMBUSTIBLES JV',
-                    'social_reason' => 'COMBUSTIBLES JV SA CV',
-                    'address_line_1' => '24 SUR NO 507',
-                    'address_line_2' => 'CENTRO',
-                    'location' => 'PUEBLA PUE',
-                    'latitude' => 19.03492,
-                    'longitude' => -98.18554,
-                    'created_at' => '2013-10-06 00:00:00',
-                    'last_updated_at' => '2013-10-06 00:00:00',
+                    '`name`' => 'COMBUSTIBLES JV',
+                    '`social_reason`' => 'COMBUSTIBLES JV SA CV',
+                    '`address_line_1`' => '24 SUR NO 507',
+                    '`address_line_2`' => 'CENTRO',
+                    '`location`' => 'PUEBLA PUE',
+                    '`latitude`' => 19.03492,
+                    '`longitude`' => -98.18554,
+                    '`created_at`' => '2013-10-06 00:00:00',
+                    '`last_updated_at`' => '2013-10-06 00:00:00',
                 ],
             ],
             'reviews' => [
                 'review_1' => [
-                   'comment' => 'El servicio es excelente',
-                   'stars' => 5,
-                   'station_id' => '@station_1',
+                   '`comment`' => 'El servicio es excelente',
+                   '`stars`' => 5,
+                   '`station_id`' => '@station_1',
                 ],
                 'review_2' => [
-                    'comment' => 'El servicio es pésimo',
-                    'stars' => 1,
-                    'station_id' => '@station_1',
+                    '`comment`' => 'El servicio es pésimo',
+                    '`stars`' => 1,
+                    '`station_id`' => '@station_1',
                 ],
             ],
         ];
@@ -75,6 +72,7 @@ class ConnectionPersisterIntegrationTest extends TestCase
     /** @test */
     public function it_persists_fixtures_with_references()
     {
+        $this->connectionWillQuoteIdentifiers();
         $this->expectConnectionSavesFourRecords();
         $this->connectionWillReturnFourInsertedIds();
         $persister = new ConnectionPersister(
@@ -82,7 +80,6 @@ class ConnectionPersisterIntegrationTest extends TestCase
         );
 
         $rows = (new YamlLoader($this->path))->load();
-        $this->assertEquals($this->gasStations, $rows);
         $persister->persist($rows);
     }
 
@@ -91,9 +88,9 @@ class ConnectionPersisterIntegrationTest extends TestCase
         $station1 = $this->gasStations['stations']['station_1'];
         $station2 = $this->gasStations['stations']['station_2'];
         $review1 = $this->gasStations['reviews']['review_1'];
-        $review1['station_id'] = $this->stationId;
+        $review1['`station_id`'] = $this->stationId;
         $review2 = $this->gasStations['reviews']['review_2'];
-        $review2['station_id'] = $this->stationId;
+        $review2['`station_id`'] = $this->stationId;
 
         $this->connection->insert('stations', $station1)->shouldBeCalled();
         $this->connection->insert('stations', $station2)->shouldBeCalled();
@@ -109,5 +106,21 @@ class ConnectionPersisterIntegrationTest extends TestCase
             1,
             2
         );
+    }
+
+    protected function connectionWillQuoteIdentifiers()
+    {
+        $this->connection->quoteIdentifier('name')->willReturn('`name`');
+        $this->connection->quoteIdentifier('social_reason')->willReturn('`social_reason`');
+        $this->connection->quoteIdentifier('address_line_1')->willReturn('`address_line_1`');
+        $this->connection->quoteIdentifier('address_line_2')->willReturn('`address_line_2`');
+        $this->connection->quoteIdentifier('location')->willReturn('`location`');
+        $this->connection->quoteIdentifier('latitude')->willReturn('`latitude`');
+        $this->connection->quoteIdentifier('longitude')->willReturn('`longitude`');
+        $this->connection->quoteIdentifier('created_at')->willReturn('`created_at`');
+        $this->connection->quoteIdentifier('last_updated_at')->willReturn('`last_updated_at`');
+        $this->connection->quoteIdentifier('comment')->willReturn('`comment`');
+        $this->connection->quoteIdentifier('stars')->willReturn('`stars`');
+        $this->connection->quoteIdentifier('station_id')->willReturn('`station_id`');
     }
 }
