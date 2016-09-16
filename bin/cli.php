@@ -1,29 +1,19 @@
 <?php
 /**
- * DBAL Fixtures CLI
+ * PHP version 5.6
  *
- * PHP version 5.4
- *
- * This source file is subject to the license that is bundled with this package in the
- * file LICENSE.
- *
- * @author     LMV <montealegreluis@gmail.com>
+ * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
 require 'vendor/autoload.php';
 
-use \Symfony\Component\Console\Application;
-use \Symfony\Component\Console\Helper\HelperSet;
-use \Symfony\Component\Console\Helper\DialogHelper;
-use \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use \Doctrine\DBAL\DriverManager;
-use \ComPHPPuebla\Doctrine\Console\Command\LoadFixtureCommand;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\DialogHelper;
+use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\DBAL\DriverManager;
+use ComPHPPuebla\Console\Command\LoadFixtureCommand;
 
-/**
- * DBAL Fixtures CLI
- *
- * @author     LMV <montealegreluis@gmail.com>
- */
-$cli = new Application('DBAL Fixtures CLI', '0.1.2');
+$cli = new Application('DBAL Fixtures CLI', '2.0.0');
 $cli->setCatchExceptions(true);
 
 $connection = DriverManager::getConnection(require 'config/connection.config.php');
