@@ -16,18 +16,21 @@ class YamlLoader implements Loader
     /** @var Parser */
     protected $reader;
 
+    /**
+     * @param string $path
+     * @param Parser|null $reader
+     */
     public function __construct($path, Parser $reader = null)
     {
         $this->path = $path;
-        $this->reader = $reader;
+        $this->reader = $reader ?: new Parser();
     }
 
+    /**
+     * @return array
+     */
     public function load()
     {
-        if (!$this->reader) {
-            $this->reader = new Parser();
-        }
-
         return $this->reader->parse(file_get_contents($this->path));
     }
 }
