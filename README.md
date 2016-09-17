@@ -62,9 +62,4 @@ Run the Symfony Console Command.
 $ ./bin/cli dbal:fixture:load data/fixture.yml
 ```
 
-## Changelog
-
-### 1.0.0 - 2014-10-08
-
-* Replace `Zend/Config` package with `Symfony\Yaml` ([#1](https://github.com/ComPHPPuebla/dbal-fixtures/pull/1))
-* Update Doctrine and Symfony packages to use `~2.4` version.
+See the [CHANGELOG](CHANGELOG.md) to see what's changed in recent versions.
