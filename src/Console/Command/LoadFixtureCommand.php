@@ -28,7 +28,9 @@ class LoadFixtureCommand extends Command
              ->setDescription('Loads a fixture in the configured database.')
              ->setDefinition([
                  new InputArgument(
-                     'file', InputArgument::REQUIRED, 'File path of YAML file to be loaded.'
+                     'file',
+                     InputArgument::REQUIRED,
+                     'File path of YAML file to be loaded.'
                  ),
              ])
              ->setHelp(<<<HELP
@@ -42,26 +44,35 @@ HELP
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $connection = $this->getHelper('db')->getConnection();
+        $persister = new ConnectionPersister($this->getHelper('db')->getConnection());
+        $loader = new YamlLoader($this->getFilename($input->getArgument('file')));
 
-        $persister = new ConnectionPersister($connection);
-
-        $path = $input->getArgument('file');
-        $fileName = realpath($path);
-
-        if (!file_exists($fileName)) {
-            throw new InvalidArgumentException(
-                sprintf("YAML file '<info>%s</info>' does not exist.", $fileName)
-            );
-        } elseif (!is_readable($fileName)) {
-            throw new InvalidArgumentException(
-                sprintf("YAML file '<info>%s</info>' does not have read permissions.", $fileName)
-            );
-        }
-
-        $loader = new YamlLoader($fileName);
-
-        $output->write(sprintf("Processing file '<info>%s</info>'... ", $fileName));
+        $output->writeln(sprintf(
+            "Processing file '<info>%s</info>'... ",
+            $this->getFilename($input->getArgument('file'))
+        ));
         $persister->persist($loader->load());
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private function getFilename($path)
+    {
+        $fileName = realpath($path);
+        if (!file_exists($fileName)) {
+            throw new InvalidArgumentException(sprintf(
+                "YAML file '<info>%s</info>' does not exist.",
+                $fileName
+            ));
+        }
+        if (!is_readable($fileName)) {
+            throw new InvalidArgumentException(sprintf(
+                "YAML file '<info>%s</info>' does not have read permissions.",
+                $fileName
+            ));
+        }
+        return $fileName;
     }
 }

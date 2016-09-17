@@ -25,19 +25,17 @@ reviews:
 Use the following code to load the file.
 
 ```php
-use \Doctrine\DBAL\DriverManager;
-use \ComPHPPuebla\Doctrine\DBAL\Fixture\Loader\YamlLoader;
-use \ComPHPPuebla\Doctrine\DBAL\Fixture\Persister\ForeignKeyParser;
+use Doctrine\DBAL\DriverManager;
+use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
+use ComPHPPuebla\DBAL\Fixture\Persister\ConnectionPersister;
 
-$params = [
-    'path' => 'test.sq3',
-    'driver' => 'pdo_sqlite',
-];
-$connection = DriverManager::getConnection($params);
+$connection = DriverManager::getConnection([
+   'path' => 'test.sq3',
+   'driver' => 'pdo_sqlite',
+]);
 
 $loader = new YamlLoader('fixtures.yml');
-$parser = new ForeignKeyParser();
-$persister = new ConnectionPersister($connection, $parser);
+$persister = new ConnectionPersister($connection);
 
 $persister->persist($loader->load());
 ```
