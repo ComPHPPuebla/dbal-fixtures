@@ -8,6 +8,7 @@ namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
 use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use PHPUnit_Framework_TestCase as TestCase;
 
 class ConnectionPersisterIntegrationTest extends TestCase
@@ -20,9 +21,6 @@ class ConnectionPersisterIntegrationTest extends TestCase
 
     /** @var Connection */
     protected $connection;
-
-    /** @var int */
-    protected $stationId;
 
     protected function setUp()
     {
@@ -65,62 +63,59 @@ class ConnectionPersisterIntegrationTest extends TestCase
                 ],
             ],
         ];
-        $this->stationId = 1;
-        $this->connection = $this->prophesize(Connection::class);
+        $this->configureConnection();
     }
 
     /** @test */
     public function it_persists_fixtures_with_references()
     {
-        $this->connectionWillQuoteIdentifiers();
-        $this->expectConnectionSavesFourRecords();
-        $this->connectionWillReturnFourInsertedIds();
         $persister = new ConnectionPersister(
-            $this->connection->reveal(), new ForeignKeyParser()
+            $this->connection, new ForeignKeyParser()
         );
 
-        $rows = (new YamlLoader($this->path))->load();
-        $persister->persist($rows);
+        $persister->persist((new YamlLoader($this->path))->load());
+
+        $station1 = $this->stationNamed('CASMEN GASOL');
+        $station2 = $this->stationNamed('COMBUSTIBLES JV');
+        $review1 = $this->reviewRated(5);
+        $review2 = $this->reviewRated(1);
+
+        $this->assertGreaterThan(0, $station1['station_id']);
+        $this->assertGreaterThan(0, $station2['station_id']);
+        $this->assertEquals($station1['station_id'], $review1['station_id']);
+        $this->assertEquals($station1['station_id'], $review2['station_id']);
     }
 
-    private function expectConnectionSavesFourRecords()
+    private function configureConnection()
     {
-        $station1 = $this->gasStations['stations']['station_1'];
-        $station2 = $this->gasStations['stations']['station_2'];
-        $review1 = $this->gasStations['reviews']['review_1'];
-        $review1['`station_id`'] = $this->stationId;
-        $review2 = $this->gasStations['reviews']['review_2'];
-        $review2['`station_id`'] = $this->stationId;
-
-        $this->connection->insert('stations', $station1)->shouldBeCalled();
-        $this->connection->insert('stations', $station2)->shouldBeCalled();
-        $this->connection->insert('reviews', $review1)->shouldBeCalled();
-        $this->connection->insert('reviews', $review2)->shouldBeCalled();
-    }
-
-    private function connectionWillReturnFourInsertedIds()
-    {
-        $this->connection->lastInsertId()->willReturn(
-            $this->stationId,
-            2,
-            1,
-            2
+        $sqlPath = realpath(sprintf('%s/../../../../data/database.sql', __DIR__));
+        shell_exec("rm $sqlPath");
+        shell_exec("touch $sqlPath");
+        shell_exec("sqlite3 test_db.sq3 < $sqlPath");
+        $this->connection = DriverManager::getConnection(require
+            __DIR__ . '/../../../../config/connection.config.php'
         );
     }
 
-    protected function connectionWillQuoteIdentifiers()
+    /**
+     * @param string $name
+     * @return array
+     */
+    private function stationNamed($name)
     {
-        $this->connection->quoteIdentifier('name')->willReturn('`name`');
-        $this->connection->quoteIdentifier('social_reason')->willReturn('`social_reason`');
-        $this->connection->quoteIdentifier('address_line_1')->willReturn('`address_line_1`');
-        $this->connection->quoteIdentifier('address_line_2')->willReturn('`address_line_2`');
-        $this->connection->quoteIdentifier('location')->willReturn('`location`');
-        $this->connection->quoteIdentifier('latitude')->willReturn('`latitude`');
-        $this->connection->quoteIdentifier('longitude')->willReturn('`longitude`');
-        $this->connection->quoteIdentifier('created_at')->willReturn('`created_at`');
-        $this->connection->quoteIdentifier('last_updated_at')->willReturn('`last_updated_at`');
-        $this->connection->quoteIdentifier('comment')->willReturn('`comment`');
-        $this->connection->quoteIdentifier('stars')->willReturn('`stars`');
-        $this->connection->quoteIdentifier('station_id')->willReturn('`station_id`');
+        return $this->connection->executeQuery(
+            'SELECT * FROM stations WHERE name = ?', [$name]
+        )->fetch();
+    }
+
+    /**
+     * @param int $stars
+     * @return array
+     */
+    private function reviewRated($stars)
+    {
+        return $this->connection->executeQuery(
+            'SELECT * FROM reviews WHERE stars = ?', [$stars]
+        )->fetch();
     }
 }

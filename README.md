@@ -1,7 +1,7 @@
 # Doctrine DBAL fixtures
 
-This package allows you to perform inserts to a database using a YAML file and Doctrine DBAL. It has
-support for foreign keys using the `@` symbol.
+This package allows you to perform inserts to a database using a YAML file and
+Doctrine DBAL. It has support for foreign keys using the `@` symbol.
 
 The following is an example of a fixture file.
 
@@ -40,9 +40,9 @@ $persister = new ConnectionPersister($connection);
 $persister->persist($loader->load());
 ```
 
-You can also load fixtures from the command line. There is a Symfony Console Application example in
-the `bin` folder. In order to run the example you will need to create a SQLite database with the
-following command.
+You can also load fixtures from the command line. There is a Symfony Console
+Application example in the `bin` folder. In order to run the example you will
+need to create a SQLite database with the following command.
 
 ```bash
 $ sqlite3 test_db.sq3 < data/database.sql
@@ -52,11 +52,6 @@ Run the Symfony Console Command.
 
 ```bash
 $ ./bin/cli dbal:fixture:load data/fixture.yml
-```
-If you need to quote the column identifiers add the `--quote` option to the command as follows:
-
-```bash
-$ ./bin/cli dbal:fixture:load --quote data/fixture.yml
 ```
 
 ## Changelog
