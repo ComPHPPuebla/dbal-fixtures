@@ -24,7 +24,7 @@ class ConnectionPersisterIntegrationTest extends TestCase
 
     protected function setUp()
     {
-        $this->path = __DIR__ . '/../../../../data/fixture.yml';
+        $this->path = realpath(__DIR__ . '/../../../../data/');
         $this->gasStations = [
             'stations' => [
                 'station_1' => [
@@ -73,7 +73,7 @@ class ConnectionPersisterIntegrationTest extends TestCase
             $this->connection, new ForeignKeyParser()
         );
 
-        $persister->persist((new YamlLoader($this->path))->load());
+        $persister->persist((new YamlLoader("$this->path/fixture.yml"))->load());
 
         $station1 = $this->stationNamed('CASMEN GASOL');
         $station2 = $this->stationNamed('COMBUSTIBLES JV');
@@ -88,10 +88,12 @@ class ConnectionPersisterIntegrationTest extends TestCase
 
     private function configureConnection()
     {
-        $sqlPath = realpath(sprintf('%s/../../../../data/database.sql', __DIR__));
-        shell_exec("rm $sqlPath");
-        shell_exec("touch $sqlPath");
-        shell_exec("sqlite3 test_db.sq3 < $sqlPath");
+        $databasePath = $this->path . '/../test_db.sq3';
+        if (file_exists($databasePath)) {
+            passthru("rm $databasePath");
+            passthru("touch $databasePath");
+        }
+        passthru("sqlite3 $databasePath < $this->path/database.sql");
         $this->connection = DriverManager::getConnection(require
             __DIR__ . '/../../../../config/connection.config.php'
         );
