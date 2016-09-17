@@ -17,10 +17,8 @@ class YamlLoaderTest extends TestCase
     /** @var array */
     protected $gasStations;
 
-    /**
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
-    protected function setUp()
+    /** @before */
+    protected function configureFixture()
     {
         $this->path = __DIR__ . '/../../../../../data/fixture.yml';
         $this->gasStations = [
@@ -43,12 +41,12 @@ class YamlLoaderTest extends TestCase
     /** @test */
     public function it_loads_fixtures_file()
     {
-        $reader = $this->prophesize(Parser::class);
-        $reader
+        $parser = $this->prophesize(Parser::class);
+        $parser
             ->parse(file_get_contents($this->path))
             ->willReturn($this->gasStations)
         ;
-        $loader = new YamlLoader($this->path, $reader->reveal());
+        $loader = new YamlLoader($this->path, $parser->reveal());
 
         $this->assertEquals($this->gasStations, $loader->load());
     }
