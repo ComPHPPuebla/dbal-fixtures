@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * PHP version 7.1
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
@@ -16,10 +16,6 @@ class ConnectionPersister implements Persister
     /** @var ForeignKeyParser */
     protected $parser;
 
-    /**
-     * @param Connection $connection
-     * @param ForeignKeyParser $parser
-     */
     public function __construct(
         Connection $connection,
         ForeignKeyParser $parser = null
@@ -28,25 +24,16 @@ class ConnectionPersister implements Persister
         $this->parser = $parser ?: new ForeignKeyParser();
     }
 
-    /**
-     * Perform insert statements
-     *
-     * @param array $fixtures
-     */
-    public function persist(array $fixtures)
+    public function persist(array $fixtures): void
     {
         foreach ($fixtures as $tableName => $rows) {
             $this->insertTableRows($tableName, $this->quoteIdentifiers($rows));
         }
     }
 
-    /**
-     * @param  array $rows
-     * @return array
-     */
-    protected function quoteIdentifiers(array $rows)
+    protected function quoteIdentifiers(array $rows): array
     {
-        $quotedRows = array_map(function ($row) {
+        $quotedRows = array_map(function (array $row) {
             $quoted = [];
             foreach ($row as $identifier => $value) {
                 $quoted[$this->connection->quoteIdentifier($identifier)] = $value;
@@ -58,11 +45,7 @@ class ConnectionPersister implements Persister
         return $quotedRows;
     }
 
-    /**
-     * @param string $tableName
-     * @param array $rows
-     */
-    protected function insertTableRows($tableName, array $rows)
+    protected function insertTableRows(string $tableName, array $rows): void
     {
         foreach ($rows as $rowKey => $values) {
             $this->connection->insert($tableName, $this->parser->parse($values));

@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * PHP version 7.1
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
@@ -13,18 +13,31 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 class ConnectionPersisterIntegrationTest extends TestCase
 {
-    /** @var string */
-    protected $path;
-
-    /** @var array */
-    protected $gasStations;
-
-    /** @var Connection */
-    protected $connection;
-
-    protected function setUp()
+    /** @test */
+    public function it_persists_fixtures_with_references()
     {
-        $this->path = realpath(__DIR__ . '/../../../../data/');
+        $persister = new ConnectionPersister($this->connection, new ForeignKeyParser());
+
+        $persister->persist((new YamlLoader("$this->path/fixture.yml"))->load());
+
+        $station1 = $this->findStationNamed('CASMEN GASOL');
+        $station2 = $this->findStationNamed('COMBUSTIBLES JV');
+        $review1 = $this->findReviewRatedWith(5);
+        $review2 = $this->findReviewRatedWith(1);
+
+        // Stations have been persisted
+        $this->assertGreaterThan(0, $station1['station_id']);
+        $this->assertGreaterThan(0, $station2['station_id']);
+
+        // Relationships match
+        $this->assertEquals($station1['station_id'], $review1['station_id']);
+        $this->assertEquals($station1['station_id'], $review2['station_id']);
+    }
+
+    /** @before */
+    protected function configureFixtures(): void
+    {
+        $this->path = __DIR__ . '/../../../../data/';
         $this->gasStations = [
             'stations' => [
                 'station_1' => [
@@ -52,9 +65,9 @@ class ConnectionPersisterIntegrationTest extends TestCase
             ],
             'reviews' => [
                 'review_1' => [
-                   '`comment`' => 'El servicio es excelente',
-                   '`stars`' => 5,
-                   '`station_id`' => '@station_1',
+                    '`comment`' => 'El servicio es excelente',
+                    '`stars`' => 5,
+                    '`station_id`' => '@station_1',
                 ],
                 'review_2' => [
                     '`comment`' => 'El servicio es pésimo',
@@ -64,26 +77,6 @@ class ConnectionPersisterIntegrationTest extends TestCase
             ],
         ];
         $this->configureConnection();
-    }
-
-    /** @test */
-    public function it_persists_fixtures_with_references()
-    {
-        $persister = new ConnectionPersister(
-            $this->connection, new ForeignKeyParser()
-        );
-
-        $persister->persist((new YamlLoader("$this->path/fixture.yml"))->load());
-
-        $station1 = $this->stationNamed('CASMEN GASOL');
-        $station2 = $this->stationNamed('COMBUSTIBLES JV');
-        $review1 = $this->reviewRated(5);
-        $review2 = $this->reviewRated(1);
-
-        $this->assertGreaterThan(0, $station1['station_id']);
-        $this->assertGreaterThan(0, $station2['station_id']);
-        $this->assertEquals($station1['station_id'], $review1['station_id']);
-        $this->assertEquals($station1['station_id'], $review2['station_id']);
     }
 
     private function configureConnection()
@@ -99,25 +92,26 @@ class ConnectionPersisterIntegrationTest extends TestCase
         );
     }
 
-    /**
-     * @param string $name
-     * @return array
-     */
-    private function stationNamed($name)
+    private function findStationNamed(string $name): array
     {
         return $this->connection->executeQuery(
             'SELECT * FROM stations WHERE name = ?', [$name]
         )->fetch();
     }
 
-    /**
-     * @param int $stars
-     * @return array
-     */
-    private function reviewRated($stars)
+    private function findReviewRatedWith(int $stars): array
     {
         return $this->connection->executeQuery(
             'SELECT * FROM reviews WHERE stars = ?', [$stars]
         )->fetch();
     }
+
+    /** @var string */
+    private $path;
+
+    /** @var array */
+    private $gasStations;
+
+    /** @var Connection */
+    private $connection;
 }

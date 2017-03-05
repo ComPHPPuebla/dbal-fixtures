@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * PHP version 7.1
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
@@ -12,7 +12,7 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\DBAL\DriverManager;
 use ComPHPPuebla\Console\Command\LoadFixtureCommand;
 
-$cli = new Application('DBAL Fixtures CLI', '2.0.0');
+$cli = new Application('DBAL Fixtures CLI', '3.0.0');
 $cli->setCatchExceptions(true);
 
 $connection = DriverManager::getConnection(require 'config/connection.config.php');

@@ -1,15 +1,14 @@
 <?php
 /**
- * PHP version 5.6
+ * PHP version 7.1
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
 namespace ComPHPPuebla\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\{InputInterface, InputArgument};
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use ComPHPPuebla\DBAL\Fixture\Persister\ConnectionPersister;
 use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
 use InvalidArgumentException;

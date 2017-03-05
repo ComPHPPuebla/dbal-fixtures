@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * PHP version 7.1
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
@@ -11,14 +11,21 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 class YamlLoaderTest extends TestCase
 {
-    /** @var string */
-    protected $path;
+    /** @test */
+    public function it_loads_fixtures_file()
+    {
+        $parser = $this->prophesize(Parser::class);
+        $parser
+            ->parse(file_get_contents($this->path))
+            ->willReturn($this->gasStations)
+        ;
+        $loader = new YamlLoader($this->path, $parser->reveal());
 
-    /** @var array */
-    protected $gasStations;
+        $this->assertEquals($this->gasStations, $loader->load());
+    }
 
     /** @before */
-    protected function configureFixture()
+    protected function configureFixture(): void
     {
         $this->path = __DIR__ . '/../../../../../data/fixture.yml';
         $this->gasStations = [
@@ -38,16 +45,9 @@ class YamlLoaderTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function it_loads_fixtures_file()
-    {
-        $parser = $this->prophesize(Parser::class);
-        $parser
-            ->parse(file_get_contents($this->path))
-            ->willReturn($this->gasStations)
-        ;
-        $loader = new YamlLoader($this->path, $parser->reveal());
+    /** @var string */
+    protected $path;
 
-        $this->assertEquals($this->gasStations, $loader->load());
-    }
+    /** @var array */
+    protected $gasStations;
 }

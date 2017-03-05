@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 5.6
+ * PHP version 7.1
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
@@ -19,20 +19,16 @@ class YamlLoader implements Loader
     /** @var Parser */
     protected $parser;
 
-    /**
-     * @param string $path
-     * @param Parser|null $parser
-     */
-    public function __construct($path, Parser $parser = null)
+    public function __construct(string $path, Parser $parser = null)
     {
         $this->path = $path;
         $this->parser = $parser ?: new Parser();
     }
 
     /**
-     * @return array
+     * @throws \Symfony\Component\Yaml\Exception\ParseException
      */
-    public function load()
+    public function load(): array
     {
         return $this->parser->parse(file_get_contents($this->path));
     }
