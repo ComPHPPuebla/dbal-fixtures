@@ -4,7 +4,7 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\DBAL\Fixture\Loader;
+namespace ComPHPPuebla\Loader;
 
 use Symfony\Component\Yaml\Parser;
 use PHPUnit_Framework_TestCase as TestCase;
@@ -27,7 +27,7 @@ class YamlLoaderTest extends TestCase
     /** @before */
     protected function configureFixture(): void
     {
-        $this->path = __DIR__ . '/../../../../../data/fixture.yml';
+        $this->path = __DIR__ . '/../../../data/fixture.yml';
         $this->gasStations = [
             'stations' => [
                 'station_1' => [

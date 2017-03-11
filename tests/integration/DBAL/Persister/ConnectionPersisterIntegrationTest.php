@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\DBAL\Fixture\Persister;
 
-use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
+use ComPHPPuebla\Loader\YamlLoader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit_Framework_TestCase as TestCase;
