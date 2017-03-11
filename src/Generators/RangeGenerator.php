@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\Generators;
 
-class RangeGenerator
+class RangeGenerator implements Generator
 {
     private $rangeRegExp = '/\[(\d*)\.\.(\d+)\]/i';
 
