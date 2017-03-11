@@ -8,7 +8,7 @@ namespace ComPHPPuebla\Processors;
 
 use Faker\Generator;
 
-class FakerProcessor
+class FakerProcessor implements Processor
 {
     private $formatterRegExp = '/\$\{(\w+)(?:\(([^\)]+)\))?\}/i';
 
