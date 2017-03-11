@@ -11,5 +11,5 @@ namespace ComPHPPuebla\DBAL\Fixture\Loader;
  */
 interface Loader
 {
-    public function load(): array;
+    public function load(string $path): array;
 }

@@ -13,23 +13,19 @@ use Symfony\Component\Yaml\Parser;
  */
 class YamlLoader implements Loader
 {
-    /** @var string */
-    protected $path;
-
     /** @var Parser */
     protected $parser;
 
-    public function __construct(string $path, Parser $parser = null)
+    public function __construct(Parser $parser = null)
     {
-        $this->path = $path;
         $this->parser = $parser ?: new Parser();
     }
 
     /**
      * @throws \Symfony\Component\Yaml\Exception\ParseException
      */
-    public function load(): array
+    public function load(string $path): array
     {
-        return $this->parser->parse(file_get_contents($this->path));
+        return $this->parser->parse(file_get_contents($path));
     }
 }

@@ -19,9 +19,9 @@ class YamlLoaderTest extends TestCase
             ->parse(file_get_contents($this->path))
             ->willReturn($this->gasStations)
         ;
-        $loader = new YamlLoader($this->path, $parser->reveal());
+        $loader = new YamlLoader($parser->reveal());
 
-        $this->assertEquals($this->gasStations, $loader->load());
+        $this->assertEquals($this->gasStations, $loader->load($this->path));
     }
 
     /** @before */

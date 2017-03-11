@@ -18,7 +18,7 @@ class ConnectionPersisterIntegrationTest extends TestCase
     {
         $persister = new ConnectionPersister($this->connection, new ForeignKeyParser());
 
-        $persister->persist((new YamlLoader("$this->path/fixture.yml"))->load());
+        $persister->persist((new YamlLoader())->load("$this->path/fixture.yml"));
 
         $station1 = $this->findStationNamed('CASMEN GASOL');
         $station2 = $this->findStationNamed('COMBUSTIBLES JV');
