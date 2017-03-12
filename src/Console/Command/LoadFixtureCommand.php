@@ -6,11 +6,11 @@
  */
 namespace ComPHPPuebla\Console\Command;
 
+use ComPHPPuebla\Fixtures;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\{InputInterface, InputArgument};
 use Symfony\Component\Console\Output\OutputInterface;
 use ComPHPPuebla\Connections\DBALConnection;
-use ComPHPPuebla\Loader\YamlLoader;
 use InvalidArgumentException;
 
 /**
@@ -33,25 +33,27 @@ class LoadFixtureCommand extends Command
                  ),
              ])
              ->setHelp(<<<HELP
-The <info>dbal:fixtures:create</info> loads a fixture in the configured database.
+The <info>dbal:fixtures:create</info> command, loads a fixture in the configured database.
 HELP
         );
     }
 
     /**
-     * {@inheritDoc}
+     * @throws \InvalidArgumentException If the file cannot be found
+     * @throws \Symfony\Component\Console\Exception\LogicException If no helper
+     * set can be found
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException If
+     * the `db` helper is not present
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $connection = new DBALConnection($this->getHelper('db')->getConnection());
-        $loader = new YamlLoader($this->getFilename($input->getArgument('file')));
-
         $filename = $this->getFilename($input->getArgument('file'));
         $output->writeln(sprintf(
             "Processing file '<info>%s</info>'... ",
             $filename
         ));
-        $connection->insert($loader->load($filename));
+        (new Fixtures($connection))->load($filename);
     }
 
     /**
