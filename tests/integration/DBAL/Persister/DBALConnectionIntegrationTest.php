@@ -6,7 +6,6 @@
  */
 namespace ComPHPPuebla\Connections;
 
-use ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyProcessor;
 use ComPHPPuebla\Fixtures;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -26,13 +25,38 @@ class DBALConnectionIntegrationTest extends TestCase
         $review1 = $this->findReviewRatedWith(5);
         $review2 = $this->findReviewRatedWith(1);
 
-        // Stations have been persisted
+        // Stations have been saved
         $this->assertGreaterThan(0, $station1['station_id']);
         $this->assertGreaterThan(0, $station2['station_id']);
 
         // Relationships match
         $this->assertEquals($station1['station_id'], $review1['station_id']);
         $this->assertEquals($station1['station_id'], $review2['station_id']);
+    }
+
+    /** @test */
+    public function it_persists_fixtures_with_references_and_fake_data()
+    {
+        $fixtures = new Fixtures(new DBALConnection($this->connection));
+
+        $fixtures->load("$this->path/fixture-faker.yml");
+
+        $station = $this->findStationNamed('CASMEN GASOL');
+        $reviews = $this->findAllReviews();
+
+        // Station has been saved
+        $this->assertGreaterThan(0, $station['station_id']);
+
+        // Relationships match
+        $this->assertEquals($station['station_id'], $reviews[0]['station_id']);
+        $this->assertEquals($station['station_id'], $reviews[1]['station_id']);
+
+        // Faker calls have been replaced
+        $this->assertNotEquals('${company}', $station['social_reason']);
+        $this->assertNotEquals('${address}', $station['address_line_1']);
+        $this->assertNotEquals('${date(\'Y-m-d H:i:s\')}', $station['created_at']);
+        $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[0]['stars']);
+        $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[1]['stars']);
     }
 
     /** @before */
@@ -105,6 +129,11 @@ class DBALConnectionIntegrationTest extends TestCase
         return $this->connection->executeQuery(
             'SELECT * FROM reviews WHERE stars = ?', [$stars]
         )->fetch();
+    }
+
+    private function findAllReviews()
+    {
+        return $this->connection->executeQuery('SELECT * FROM reviews')->fetchAll();
     }
 
     /** @var string */
