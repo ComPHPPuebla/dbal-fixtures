@@ -20,13 +20,22 @@ class FakerProcessor implements Processor
         $this->generator = $generator;
     }
 
-    public function process(array $row): void
+    public function process(array $row): array
     {
+        $processedRow = [];
         foreach ($row as $column => $value) {
             if ($this->isFakerFormatter($value)) {
-                $row[$column] = $this->callFormatter($value);
+                $processedRow[$column] = $this->callFormatter($value);
+            } else {
+                $processedRow[$column] = $row[$column];
             }
         }
+        return $processedRow;
+    }
+
+    public function postProcessing(string $key, int $id): void
+    {
+        // Nothing to do...
     }
 
     private function isFakerFormatter(string $value): bool

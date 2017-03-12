@@ -6,7 +6,6 @@
  */
 namespace ComPHPPuebla\Connections;
 
-use ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser;
 use Doctrine\DBAL\Connection as DbConnection;
 
 class DBALConnection implements Connection
@@ -14,43 +13,30 @@ class DBALConnection implements Connection
     /** @var DbConnection */
     protected $connection;
 
-    /** @var ForeignKeyParser */
-    protected $parser;
-
-    public function __construct(
-        DbConnection $connection,
-        ForeignKeyParser $parser = null
-    ) {
+    public function __construct(DbConnection $connection)
+    {
         $this->connection = $connection;
-        $this->parser = $parser ?: new ForeignKeyParser();
     }
 
-    public function insert(array $fixtures): void
+    public function insert(string $table, array $row): int
     {
-        foreach ($fixtures as $tableName => $rows) {
-            $this->insertTableRows($tableName, $this->quoteIdentifiers($rows));
+        return $this->insertTableRows($table, $this->quoteIdentifiers($row));
+    }
+
+    protected function insertTableRows(string $table, array $row): int
+    {
+//        $this->connection->insert($table, $this->quoteIdentifiers($row));
+        $this->connection->insert($table, $row);
+        return $this->connection->lastInsertId();
+    }
+
+    protected function quoteIdentifiers(array $row): array
+    {
+        $quoted = [];
+        foreach ($row as $column => $value) {
+            $quoted[$this->connection->quoteIdentifier($column)] = $value;
         }
-    }
 
-    protected function quoteIdentifiers(array $rows): array
-    {
-        $quotedRows = array_map(function (array $row) {
-            $quoted = [];
-            foreach ($row as $identifier => $value) {
-                $quoted[$this->connection->quoteIdentifier($identifier)] = $value;
-            }
-
-            return $quoted;
-        }, $rows);
-
-        return $quotedRows;
-    }
-
-    protected function insertTableRows(string $tableName, array $rows): void
-    {
-        foreach ($rows as $rowKey => $values) {
-            $this->connection->insert($tableName, $this->parser->parse($values));
-            $this->parser->addReference($rowKey, $this->connection->lastInsertId());
-        }
+        return $quoted;
     }
 }

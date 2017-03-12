@@ -8,5 +8,7 @@ namespace ComPHPPuebla\Processors;
 
 interface Processor
 {
-    public function process(array $row): void;
+    public function process(array $row): array;
+
+    public function postProcessing(string $key, int $id): void;
 }

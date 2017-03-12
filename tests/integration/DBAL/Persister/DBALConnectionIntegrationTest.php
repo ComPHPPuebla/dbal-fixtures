@@ -6,8 +6,8 @@
  */
 namespace ComPHPPuebla\Connections;
 
-use ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser;
-use ComPHPPuebla\Loader\YamlLoader;
+use ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyProcessor;
+use ComPHPPuebla\Fixtures;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit_Framework_TestCase as TestCase;
@@ -17,9 +17,9 @@ class DBALConnectionIntegrationTest extends TestCase
     /** @test */
     public function it_persists_fixtures_with_references()
     {
-        $connection = new DBALConnection($this->connection, new ForeignKeyParser());
+        $fixtures = new Fixtures(new DBALConnection($this->connection));
 
-        $connection->insert((new YamlLoader())->load("$this->path/fixture.yml"));
+        $fixtures->load("$this->path/fixture.yml");
 
         $station1 = $this->findStationNamed('CASMEN GASOL');
         $station2 = $this->findStationNamed('COMBUSTIBLES JV');

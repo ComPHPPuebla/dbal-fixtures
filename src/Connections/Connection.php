@@ -11,5 +11,5 @@ namespace ComPHPPuebla\Connections;
  */
 interface Connection
 {
-    public function insert(array $rows): void;
+    public function insert(string $table, array $row): int;
 }
