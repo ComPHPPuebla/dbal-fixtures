@@ -4,27 +4,28 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\DBAL\Fixture\Persister;
+namespace ComPHPPuebla\Connections;
 
-use Doctrine\DBAL\Connection;
+use ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser;
+use Doctrine\DBAL\Connection as DbConnection;
 
-class ConnectionPersister implements Persister
+class DBALConnection implements Connection
 {
-    /** @var Connection */
+    /** @var DbConnection */
     protected $connection;
 
     /** @var ForeignKeyParser */
     protected $parser;
 
     public function __construct(
-        Connection $connection,
+        DbConnection $connection,
         ForeignKeyParser $parser = null
     ) {
         $this->connection = $connection;
         $this->parser = $parser ?: new ForeignKeyParser();
     }
 
-    public function persist(array $fixtures): void
+    public function insert(array $fixtures): void
     {
         foreach ($fixtures as $tableName => $rows) {
             $this->insertTableRows($tableName, $this->quoteIdentifiers($rows));

@@ -9,8 +9,8 @@ namespace ComPHPPuebla\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\{InputInterface, InputArgument};
 use Symfony\Component\Console\Output\OutputInterface;
-use ComPHPPuebla\DBAL\Fixture\Persister\ConnectionPersister;
-use ComPHPPuebla\DBAL\Fixture\Loader\YamlLoader;
+use ComPHPPuebla\Connections\DBALConnection;
+use ComPHPPuebla\Loader\YamlLoader;
 use InvalidArgumentException;
 
 /**
@@ -43,21 +43,21 @@ HELP
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $persister = new ConnectionPersister($this->getHelper('db')->getConnection());
+        $connection = new DBALConnection($this->getHelper('db')->getConnection());
         $loader = new YamlLoader($this->getFilename($input->getArgument('file')));
 
+        $filename = $this->getFilename($input->getArgument('file'));
         $output->writeln(sprintf(
             "Processing file '<info>%s</info>'... ",
-            $this->getFilename($input->getArgument('file'))
+            $filename
         ));
-        $persister->persist($loader->load());
+        $connection->insert($loader->load($filename));
     }
 
     /**
-     * @param string $path
-     * @return string
+     * @throws \InvalidArgumentException If file does not exist, or can't be read
      */
-    private function getFilename($path)
+    private function getFilename(string $path): string
     {
         $fileName = realpath($path);
         if (!file_exists($fileName)) {

@@ -1,15 +1,15 @@
 <?php
 /**
- * PHP version 5.6
+ * PHP version 7.1
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\DBAL\Fixture\Persister;
+namespace ComPHPPuebla\Connections;
 
 /**
  * Insert the given rows to a database
  */
-interface Persister
+interface Connection
 {
-    public function persist(array $rows): void;
+    public function insert(array $rows): void;
 }

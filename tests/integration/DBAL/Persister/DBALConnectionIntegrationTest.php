@@ -4,21 +4,22 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\DBAL\Fixture\Persister;
+namespace ComPHPPuebla\Connections;
 
+use ComPHPPuebla\DBAL\Fixture\Persister\ForeignKeyParser;
 use ComPHPPuebla\Loader\YamlLoader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit_Framework_TestCase as TestCase;
 
-class ConnectionPersisterIntegrationTest extends TestCase
+class DBALConnectionIntegrationTest extends TestCase
 {
     /** @test */
     public function it_persists_fixtures_with_references()
     {
-        $persister = new ConnectionPersister($this->connection, new ForeignKeyParser());
+        $connection = new DBALConnection($this->connection, new ForeignKeyParser());
 
-        $persister->persist((new YamlLoader())->load("$this->path/fixture.yml"));
+        $connection->insert((new YamlLoader())->load("$this->path/fixture.yml"));
 
         $station1 = $this->findStationNamed('CASMEN GASOL');
         $station2 = $this->findStationNamed('COMBUSTIBLES JV');
