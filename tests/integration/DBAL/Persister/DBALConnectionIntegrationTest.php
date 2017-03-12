@@ -59,6 +59,46 @@ class DBALConnectionIntegrationTest extends TestCase
         $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[1]['stars']);
     }
 
+    /** @test */
+    public function it_persists_fixtures_with_generated_rows_references_and_fake_data()
+    {
+        $fixtures = new Fixtures(new DBALConnection($this->connection));
+
+        $fixtures->load("$this->path/fixture-all.yml");
+
+        $stations = $this->findAllStations();
+        $reviews = $this->findAllReviews();
+
+        // Station has been saved
+        $this->assertCount(3, $stations);
+        $this->assertGreaterThan(0, $stations[0]['station_id']);
+        $this->assertGreaterThan(0, $stations[1]['station_id']);
+        $this->assertGreaterThan(0, $stations[2]['station_id']);
+
+        // Relationships match, 2 reviews for station 1, 3 for station 2
+        $this->assertEquals($stations[0]['station_id'], $reviews[0]['station_id']);
+        $this->assertEquals($stations[0]['station_id'], $reviews[1]['station_id']);
+        $this->assertEquals($stations[1]['station_id'], $reviews[2]['station_id']);
+        $this->assertEquals($stations[1]['station_id'], $reviews[3]['station_id']);
+        $this->assertEquals($stations[1]['station_id'], $reviews[4]['station_id']);
+
+        // Faker calls have been replaced
+        $this->assertNotEquals('${company}', $stations[0]['social_reason']);
+        $this->assertNotEquals('${address}', $stations[0]['address_line_1']);
+        $this->assertNotEquals('${date(\'Y-m-d H:i:s\')}', $stations[0]['created_at']);
+        $this->assertNotEquals('${company}', $stations[1]['social_reason']);
+        $this->assertNotEquals('${address}', $stations[1]['address_line_1']);
+        $this->assertNotEquals('${date(\'Y-m-d H:i:s\')}', $stations[1]['created_at']);
+        $this->assertNotEquals('${company}', $stations[2]['social_reason']);
+        $this->assertNotEquals('${address}', $stations[2]['address_line_1']);
+        $this->assertNotEquals('${date(\'Y-m-d H:i:s\')}', $stations[2]['created_at']);
+        $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[0]['stars']);
+        $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[1]['stars']);
+        $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[2]['stars']);
+        $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[3]['stars']);
+        $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[4]['stars']);
+    }
+
     /** @before */
     protected function configureFixtures(): void
     {
@@ -134,6 +174,11 @@ class DBALConnectionIntegrationTest extends TestCase
     private function findAllReviews()
     {
         return $this->connection->executeQuery('SELECT * FROM reviews')->fetchAll();
+    }
+
+    private function findAllStations()
+    {
+        return $this->connection->executeQuery('SELECT * FROM stations')->fetchAll();
     }
 
     /** @var string */
