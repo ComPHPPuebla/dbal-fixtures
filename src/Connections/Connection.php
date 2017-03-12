@@ -7,7 +7,7 @@
 namespace ComPHPPuebla\Connections;
 
 /**
- * Insert the given rows to a database
+ * Insert the given row to a database
  */
 interface Connection
 {

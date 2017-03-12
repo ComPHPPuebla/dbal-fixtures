@@ -20,23 +20,16 @@ class DBALConnection implements Connection
 
     public function insert(string $table, array $row): int
     {
-        return $this->insertTableRows($table, $this->quoteIdentifiers($row));
-    }
-
-    protected function insertTableRows(string $table, array $row): int
-    {
-//        $this->connection->insert($table, $this->quoteIdentifiers($row));
-        $this->connection->insert($table, $row);
+        $this->connection->insert($table, $this->quoteIdentifiers($row));
         return $this->connection->lastInsertId();
     }
 
-    protected function quoteIdentifiers(array $row): array
+    private function quoteIdentifiers(array $row): array
     {
         $quoted = [];
         foreach ($row as $column => $value) {
             $quoted[$this->connection->quoteIdentifier($column)] = $value;
         }
-
         return $quoted;
     }
 }
