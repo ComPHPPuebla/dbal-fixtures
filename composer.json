@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ComPHPPuebla\\": "src"
+            "ComPHPPuebla\\Fixtures\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ComPHPPuebla\\": "tests/src"
+            "ComPHPPuebla\\Fixtures\\": "tests/src"
         }
     },
     "config": {

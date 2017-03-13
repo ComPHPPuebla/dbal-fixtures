@@ -4,13 +4,13 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\Commands;
+namespace ComPHPPuebla\Fixtures\Commands;
 
-use ComPHPPuebla\Fixtures;
+use ComPHPPuebla\Fixtures\Fixtures;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\{InputInterface, InputArgument};
 use Symfony\Component\Console\Output\OutputInterface;
-use ComPHPPuebla\Connections\DBALConnection;
+use ComPHPPuebla\Fixtures\Connections\DBALConnection;
 use InvalidArgumentException;
 
 /**

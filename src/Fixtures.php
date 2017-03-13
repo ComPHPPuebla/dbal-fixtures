@@ -4,16 +4,16 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla;
+namespace ComPHPPuebla\Fixtures;
 
-use ComPHPPuebla\Generators\RangeGenerator;
-use ComPHPPuebla\Loaders\Loader;
-use ComPHPPuebla\Connections\Connection;
-use ComPHPPuebla\Generators\Generator;
-use ComPHPPuebla\Loaders\YamlLoader;
-use ComPHPPuebla\Processors\FakerProcessor;
-use ComPHPPuebla\Processors\ForeignKeyProcessor;
-use ComPHPPuebla\Processors\Processor;
+use ComPHPPuebla\Fixtures\Generators\RangeGenerator;
+use ComPHPPuebla\Fixtures\Loaders\Loader;
+use ComPHPPuebla\Fixtures\Connections\Connection;
+use ComPHPPuebla\Fixtures\Generators\Generator;
+use ComPHPPuebla\Fixtures\Loaders\YamlLoader;
+use ComPHPPuebla\Fixtures\Processors\FakerProcessor;
+use ComPHPPuebla\Fixtures\Processors\ForeignKeyProcessor;
+use ComPHPPuebla\Fixtures\Processors\Processor;
 use Faker\Factory;
 
 class Fixtures

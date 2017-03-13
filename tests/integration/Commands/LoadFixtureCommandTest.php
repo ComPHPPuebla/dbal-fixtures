@@ -4,9 +4,9 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\Commands;
+namespace ComPHPPuebla\Fixtures\Commands;
 
-use ComPHPPuebla\ProvidesConnection;
+use ComPHPPuebla\Fixtures\ProvidesConnection;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use PHPUnit_Framework_TestCase as TestCase;
 use Symfony\Component\Console\Helper\HelperSet;

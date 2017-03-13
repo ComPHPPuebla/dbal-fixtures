@@ -4,7 +4,7 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\Connections;
+namespace ComPHPPuebla\Fixtures\Connections;
 
 use Doctrine\DBAL\Connection;
 use PHPUnit_Framework_TestCase as TestCase;
