@@ -18,7 +18,7 @@ class YamlLoader implements Loader
 
     public function __construct(Parser $parser = null)
     {
-        $this->parser = $parser ?: new Parser();
+        $this->parser = $parser ?? new Parser();
     }
 
     /**
