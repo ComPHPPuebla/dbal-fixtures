@@ -7,7 +7,7 @@
 namespace ComPHPPuebla\Fixtures\Processors;
 
 use Faker\Generator;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class FakerProcessorTest extends TestCase
 {

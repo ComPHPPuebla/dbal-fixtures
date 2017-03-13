@@ -8,7 +8,7 @@ namespace ComPHPPuebla\Fixtures\Commands;
 
 use ComPHPPuebla\Fixtures\ProvidesConnection;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;

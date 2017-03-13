@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures\Processors;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ForeignKeyProcessorTest extends TestCase
 {

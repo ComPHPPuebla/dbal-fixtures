@@ -7,7 +7,7 @@
 namespace ComPHPPuebla\Fixtures\Connections;
 
 use Doctrine\DBAL\Connection;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
 class DBALConnectionTest extends TestCase

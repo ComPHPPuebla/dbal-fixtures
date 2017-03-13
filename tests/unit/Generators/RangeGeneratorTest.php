@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures\Generators;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class RangeGeneratorTest extends TestCase
 {

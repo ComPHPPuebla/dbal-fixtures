@@ -7,7 +7,7 @@
 namespace ComPHPPuebla\Fixtures\Loaders;
 
 use Symfony\Component\Yaml\Parser;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class YamlLoaderTest extends TestCase
 {
