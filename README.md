@@ -14,7 +14,7 @@ generation of fake data.
 1. [Complete Reference](#complete-reference)
     1. [YAML](#yaml)
     1. [References](#references)
-    1. [Rows Generation](#row-generation)
+    1. [Rows Generation](#rows-generation)
     1. [Fake Data Generation](#fake-data-generation)
 1. [Console Application Example](#console-application-example)
 1. [Tests](#tests)
