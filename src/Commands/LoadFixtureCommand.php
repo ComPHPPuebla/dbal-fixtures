@@ -4,7 +4,7 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\Console\Command;
+namespace ComPHPPuebla\Commands;
 
 use ComPHPPuebla\Fixtures;
 use Symfony\Component\Console\Command\Command;
