@@ -10,7 +10,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\DBAL\DriverManager;
-use ComPHPPuebla\Commands\LoadFixtureCommand;
+use ComPHPPuebla\Fixtures\Commands\LoadFixtureCommand;
 
 $cli = new Application('DBAL Fixtures CLI', '3.0.0');
 $cli->setCatchExceptions(true);
