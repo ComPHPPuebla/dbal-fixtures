@@ -7,10 +7,10 @@
 namespace ComPHPPuebla;
 
 use ComPHPPuebla\Generators\RangeGenerator;
-use ComPHPPuebla\Loader\Loader;
+use ComPHPPuebla\Loaders\Loader;
 use ComPHPPuebla\Connections\Connection;
 use ComPHPPuebla\Generators\Generator;
-use ComPHPPuebla\Loader\YamlLoader;
+use ComPHPPuebla\Loaders\YamlLoader;
 use ComPHPPuebla\Processors\FakerProcessor;
 use ComPHPPuebla\Processors\ForeignKeyProcessor;
 use ComPHPPuebla\Processors\Processor;
