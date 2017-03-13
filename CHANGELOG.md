@@ -15,3 +15,11 @@
 * Identifiers are quoted now by default.
 * Make the the ForeignKeyParser a default value in YamlLoader constructor.
 * Keep only the integration tests for the Persister class.
+
+## 3.0.0 - 2017-03-13
+
+* PSR-4 root namespace is now `ComPHPPuebla\Fixtures`.
+* Updated minimum PHP version to 7.1.
+* Update package dependencies.
+* Add support to generate fake data using Faker.
+* Added facade class `Fixture`, now you only need to call `load` on this object.
