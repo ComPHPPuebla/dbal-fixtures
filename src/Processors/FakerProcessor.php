@@ -63,7 +63,8 @@ class FakerProcessor implements Processor
      */
     private function call(array $callDefinition)
     {
-        [$_, $formatter, $arguments] = $callDefinition;
+        array_shift($callDefinition);
+        [$formatter, $arguments] = $callDefinition;
 
         return $this->generator->format(
             $formatter,
