@@ -24,6 +24,11 @@
             "ComPHPPuebla\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "ComPHPPuebla\\": "tests/src"
+        }
+    },
     "config": {
         "bin-dir": "bin"
     },

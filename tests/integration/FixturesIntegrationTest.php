@@ -13,6 +13,8 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 class FixturesIntegrationTest extends TestCase
 {
+    use ProvidesConnection;
+
     /** @test */
     public function it_persists_fixtures_with_references()
     {
@@ -106,19 +108,6 @@ class FixturesIntegrationTest extends TestCase
         $this->configureConnection();
     }
 
-    private function configureConnection()
-    {
-        $databasePath = $this->path . '/../test_db.sq3';
-        if (file_exists($databasePath)) {
-            passthru("rm $databasePath");
-            passthru("touch $databasePath");
-        }
-        passthru("sqlite3 $databasePath < $this->path/database.sql");
-        $this->connection = DriverManager::getConnection(require
-            __DIR__ . '/../../config/connection.config.php'
-        );
-    }
-
     private function findStationNamed(string $name): array
     {
         return $this->connection->executeQuery(
@@ -145,7 +134,4 @@ class FixturesIntegrationTest extends TestCase
 
     /** @var string */
     private $path;
-
-    /** @var Connection */
-    private $connection;
 }
