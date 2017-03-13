@@ -4,14 +4,14 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace ComPHPPuebla\Connections;
+namespace ComPHPPuebla;
 
-use ComPHPPuebla\Fixtures;
+use ComPHPPuebla\Connections\DBALConnection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit_Framework_TestCase as TestCase;
 
-class DBALConnectionIntegrationTest extends TestCase
+class FixturesIntegrationTest extends TestCase
 {
     /** @test */
     public function it_persists_fixtures_with_references()
@@ -102,7 +102,7 @@ class DBALConnectionIntegrationTest extends TestCase
     /** @before */
     protected function configureFixtures(): void
     {
-        $this->path = __DIR__ . '/../../../../data/';
+        $this->path = __DIR__ . '/../../data/';
         $this->gasStations = [
             'stations' => [
                 'station_1' => [
@@ -153,7 +153,7 @@ class DBALConnectionIntegrationTest extends TestCase
         }
         passthru("sqlite3 $databasePath < $this->path/database.sql");
         $this->connection = DriverManager::getConnection(require
-            __DIR__ . '/../../../../config/connection.config.php'
+            __DIR__ . '/../../config/connection.config.php'
         );
     }
 
