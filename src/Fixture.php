@@ -16,7 +16,7 @@ use ComPHPPuebla\Fixtures\Processors\ForeignKeyProcessor;
 use ComPHPPuebla\Fixtures\Processors\Processor;
 use Faker\Factory;
 
-class Fixtures
+class Fixture
 {
     /** @var Loader */
     private $loader;

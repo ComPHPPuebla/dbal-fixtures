@@ -9,14 +9,14 @@ namespace ComPHPPuebla\Fixtures;
 use ComPHPPuebla\Fixtures\Connections\DBALConnection;
 use PHPUnit_Framework_TestCase as TestCase;
 
-class FixturesIntegrationTest extends TestCase
+class FixtureIntegrationTest extends TestCase
 {
     use ProvidesConnection;
 
     /** @test */
     public function it_persists_fixtures_with_references()
     {
-        $fixtures = new Fixtures(new DBALConnection($this->connection));
+        $fixtures = new Fixture(new DBALConnection($this->connection));
 
         $fixtures->load("$this->path/fixture.yml");
 
@@ -37,7 +37,7 @@ class FixturesIntegrationTest extends TestCase
     /** @test */
     public function it_persists_fixtures_with_references_and_fake_data()
     {
-        $fixtures = new Fixtures(new DBALConnection($this->connection));
+        $fixtures = new Fixture(new DBALConnection($this->connection));
 
         $fixtures->load("$this->path/fixture-faker.yml");
 
@@ -62,7 +62,7 @@ class FixturesIntegrationTest extends TestCase
     /** @test */
     public function it_persists_fixtures_with_generated_rows_references_and_fake_data()
     {
-        $fixtures = new Fixtures(new DBALConnection($this->connection));
+        $fixtures = new Fixture(new DBALConnection($this->connection));
 
         $fixtures->load("$this->path/fixture-all.yml");
 

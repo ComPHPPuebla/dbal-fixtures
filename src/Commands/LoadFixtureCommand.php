@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures\Commands;
 
-use ComPHPPuebla\Fixtures\Fixtures;
+use ComPHPPuebla\Fixtures\Fixture;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\{InputInterface, InputArgument};
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,7 +53,7 @@ HELP
             "Processing file '<info>%s</info>'... ",
             $filename
         ));
-        (new Fixtures($connection))->load($filename);
+        (new Fixture($connection))->load($filename);
     }
 
     /**
