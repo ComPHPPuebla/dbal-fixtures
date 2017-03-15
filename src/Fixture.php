@@ -30,6 +30,9 @@ class Fixture
     /** @var Connection */
     private $connection;
 
+    /** @var array */
+    private $rows = [];
+
     public function __construct(
         Connection $connection,
         Loader $loader = null,
@@ -48,17 +51,30 @@ class Fixture
         $tables = $this->loader->load($pathToFixturesFile);
 
         foreach ($tables as $table => $rows) {
+            $primaryKey = $this->connection->getPrimaryKeyOf($table);
             $generatedRows = $this->generator->generate($rows);
             foreach ($generatedRows as $key => $row) {
                 foreach ($this->processors as $processor) {
                     $row = $processor->process($row);
                 }
                 $id = $this->connection->insert($table, $row);
+                $this->rows[$key] = $this->assignGeneratedKey($primaryKey, $id, $row);
                 foreach ($this->processors as $processor) {
                     $processor->postProcessing($key, $id);
                 }
             }
         }
+    }
+
+    public function rows(): array
+    {
+        return $this->rows;
+    }
+
+    private function assignGeneratedKey(string $column, int $id, array $row): array
+    {
+        $row[$column] = $id;
+        return $row;
     }
 
     /**

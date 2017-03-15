@@ -9,7 +9,7 @@ namespace ComPHPPuebla\Fixtures;
 use ComPHPPuebla\Fixtures\Connections\DBALConnection;
 use PHPUnit\Framework\TestCase;
 
-class FixtureIntegrationTest extends TestCase
+class FixtureTest extends TestCase
 {
     use ProvidesConnection;
 
@@ -97,6 +97,26 @@ class FixtureIntegrationTest extends TestCase
         $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[2]['stars']);
         $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[3]['stars']);
         $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[4]['stars']);
+    }
+
+    /** @test */
+    public function it_has_access_to_the_inserted_rows()
+    {
+        $fixtures = new Fixture(new DBALConnection($this->connection));
+
+        $fixtures->load("$this->path/fixture.yml");
+
+        $insertedRows = $fixtures->rows();
+
+        $this->assertCount(4, $insertedRows);
+        $this->assertArrayHasKey('station_1', $insertedRows);
+        $this->assertInternalType('int', $insertedRows['station_1']['station_id']);
+        $this->assertArrayHasKey('station_2', $insertedRows);
+        $this->assertInternalType('int', $insertedRows['station_2']['station_id']);
+        $this->assertArrayHasKey('review_1', $insertedRows);
+        $this->assertInternalType('int', $insertedRows['review_1']['review_id']);
+        $this->assertArrayHasKey('review_2', $insertedRows);
+        $this->assertInternalType('int', $insertedRows['review_2']['review_id']);
     }
 
     /** @before */

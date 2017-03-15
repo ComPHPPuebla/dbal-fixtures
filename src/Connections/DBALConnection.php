@@ -32,4 +32,10 @@ class DBALConnection implements Connection
         }
         return $quoted;
     }
+
+    public function getPrimaryKeyOf(string $table): string
+    {
+        $schema = $this->connection->getSchemaManager();
+        return $schema->listTableDetails($table)->getPrimaryKeyColumns()[0];
+    }
 }

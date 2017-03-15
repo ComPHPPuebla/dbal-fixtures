@@ -12,4 +12,6 @@ namespace ComPHPPuebla\Fixtures\Connections;
 interface Connection
 {
     public function insert(string $table, array $row): int;
+
+    public function getPrimaryKeyOf(string $table): string;
 }
