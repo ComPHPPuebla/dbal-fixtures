@@ -73,6 +73,8 @@ class Fixture
 
     private function assignGeneratedKey(string $column, int $id, array $row): array
     {
+        if (isset($row[$column])) return $row; // This is not an auto-generated key
+
         $row[$column] = $id;
         return $row;
     }

@@ -1,0 +1,4 @@
+states:
+    state_1:
+        url: "puebla"
+        name: "Puebla"

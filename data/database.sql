@@ -23,4 +23,10 @@ CREATE TABLE reviews (
     FOREIGN KEY(station_id) REFERENCES station(station_id)
 );
 
+CREATE TABLE states (
+    url VARCHAR(500) NOT NULL,
+    name VARCHAR(500) NOT NULL,
+    PRIMARY KEY(url)
+);
+
 COMMIT;

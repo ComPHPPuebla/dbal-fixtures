@@ -119,6 +119,18 @@ class FixtureTest extends TestCase
         $this->assertInternalType('int', $insertedRows['review_2']['review_id']);
     }
 
+    /** @test */
+    public function it_does_not_override_non_auto_generated_ids()
+    {
+        $fixtures = new Fixture(new DBALConnection($this->connection));
+
+        $fixtures->load("$this->path/fixture-with-id.yml");
+
+        $insertedRows = $fixtures->rows();
+
+        $this->assertEquals('puebla', $insertedRows['state_1']['url']);
+    }
+
     /** @before */
     protected function configureFixtures(): void
     {
