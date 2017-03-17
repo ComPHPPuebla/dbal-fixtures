@@ -20,7 +20,10 @@ class ForeignKeyProcessor implements Processor
     {
         $processedRows = [];
         foreach ($row as $column => $value) {
-            if (null === $value) continue;
+            if (null === $value) {
+                $processedRows[$column] = $value;
+                continue;
+            }
             $processedRows[$column] = $this->parseKeyIfNeeded($value);
         }
         return $processedRows;

@@ -24,7 +24,7 @@ class FakerProcessor implements Processor
     {
         $processedRow = [];
         foreach ($row as $column => $value) {
-            if ($this->isFakerFormatter($value)) {
+            if ($value !== null && $this->isFakerFormatter($value)) {
                 $processedRow[$column] = $this->callFormatter($value);
             } else {
                 $processedRow[$column] = $row[$column];
