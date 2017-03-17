@@ -29,4 +29,11 @@ CREATE TABLE states (
     PRIMARY KEY(url)
 );
 
+CREATE TABLE roles (
+    role_id INTEGER NOT NULL,
+    name VARCHAR(500) NOT NULL,
+    parent_role VARCHAR(500),
+    PRIMARY KEY(role_id)
+);
+
 COMMIT;

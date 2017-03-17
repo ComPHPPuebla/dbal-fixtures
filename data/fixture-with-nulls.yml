@@ -1,0 +1,4 @@
+roles:
+    role_1:
+        name: "admin"
+        parent_role: null

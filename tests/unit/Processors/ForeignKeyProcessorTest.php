@@ -93,4 +93,16 @@ class ForeignKeyProcessorTest extends TestCase
         $this->assertEquals('El servicio es excelente', $originalValue['comment']);
         $this->assertEquals(5, $originalValue['stars']);
     }
+
+    /** @test */
+    public function it_ignores_null_values()
+    {
+        $originalValue = (new ForeignKeyProcessor())->process([
+            'name' => 'admin',
+            'parent_role' => null,
+        ]);
+
+        $this->assertEquals('admin', $originalValue['name']);
+        $this->assertNull($originalValue['parent_role']);
+    }
 }

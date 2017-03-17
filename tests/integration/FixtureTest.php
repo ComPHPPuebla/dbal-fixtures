@@ -131,6 +131,19 @@ class FixtureTest extends TestCase
         $this->assertEquals('puebla', $insertedRows['state_1']['url']);
     }
 
+    /** @test */
+    public function it_ignores_null_values_in_rows()
+    {
+        $fixtures = new Fixture(new DBALConnection($this->connection));
+
+        $fixtures->load("$this->path/fixture-with-nulls.yml");
+
+        $insertedRows = $fixtures->rows();
+
+        $this->assertEquals('admin', $insertedRows['role_1']['name']);
+        $this->assertNull($insertedRows['role_1']['parent_role']);
+    }
+
     /** @before */
     protected function configureFixtures(): void
     {
