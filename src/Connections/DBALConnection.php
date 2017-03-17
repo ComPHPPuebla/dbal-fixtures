@@ -38,4 +38,10 @@ class DBALConnection implements Connection
         $schema = $this->connection->getSchemaManager();
         return $schema->listTableDetails($table)->getPrimaryKeyColumns()[0];
     }
+
+    public function registerPlatformType(string $platformType, string $dbalType)
+    {
+        $schema = $this->connection->getSchemaManager();
+        $schema->getDatabasePlatform()->registerDoctrineTypeMapping($platformType, $dbalType);
+    }
 }
