@@ -23,3 +23,10 @@
 * Update package dependencies.
 * Add support to generate fake data using Faker.
 * Added facade class `Fixture`, now you only need to call `load` on this object.
+
+## 3.1.0 - 2017-06-20
+
+* Added support to retrieve the rows inserted through the `Fixture#rows` method.
+* Fixed issue: Non `AUTO_INCREMENT` primary keys are not overwritten anymore.
+* Added ability to register specific platform types like `enum` in MySQL.
+* Added ability to specify `null` values in the `yml` file.
