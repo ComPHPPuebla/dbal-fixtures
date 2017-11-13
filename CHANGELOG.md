@@ -30,3 +30,8 @@
 * Fixed issue: Non `AUTO_INCREMENT` primary keys are not overwritten anymore.
 * Added ability to register specific platform types like `enum` in MySQL.
 * Added ability to specify `null` values in the `yml` file.
+
+## 3.1.1 - 2017-11-13
+
+* Fixed issue with `ForeingKeyProcessor#isReference`. It failed to identify references
+  in empty entries. See [#3](https://github.com/ComPHPPuebla/dbal-fixtures/issues/3)
