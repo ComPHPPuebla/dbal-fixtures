@@ -52,6 +52,10 @@ class ForeignKeyProcessor implements Processor
 
     private function isAReference(string $value): bool
     {
+        if (empty($value)) {
+            return false;
+        }
+
         return '@' === $value[0];
     }
 
