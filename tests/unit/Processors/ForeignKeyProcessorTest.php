@@ -105,4 +105,16 @@ class ForeignKeyProcessorTest extends TestCase
         $this->assertEquals('admin', $originalValue['name']);
         $this->assertNull($originalValue['parent_role']);
     }
+
+    /** @test */
+    public function it_ignores_entries_with_empty_strings()
+    {
+        $originalRow = (new ForeignKeyProcessor())->process([
+            'comment' => '',
+            'stars' => 5,
+        ]);
+
+        $this->assertEquals('', $originalRow['comment']);
+        $this->assertEquals(5, $originalRow['stars']);
+    }
 }
