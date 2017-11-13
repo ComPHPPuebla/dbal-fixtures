@@ -17,13 +17,13 @@ class ForeignKeyProcessorTest extends TestCase
         $processor->postProcessing('station_1', 1);
 
 
-        $row = $processor->process([
+        $processedRow = $processor->process([
             'comment' => 'El servicio es excelente',
             'stars' => 5,
             'station_id' => '@station_1',
         ]);
 
-        $this->assertEquals(1, $row['station_id']);
+        $this->assertEquals(1, $processedRow['station_id']);
     }
 
     /** @test */
@@ -85,25 +85,25 @@ class ForeignKeyProcessorTest extends TestCase
     /** @test */
     public function it_ignores_entries_without_foreign_keys()
     {
-        $originalValue = (new ForeignKeyProcessor())->process([
+        $originalRow = (new ForeignKeyProcessor())->process([
             'comment' => 'El servicio es excelente',
             'stars' => 5,
         ]);
 
-        $this->assertEquals('El servicio es excelente', $originalValue['comment']);
-        $this->assertEquals(5, $originalValue['stars']);
+        $this->assertEquals('El servicio es excelente', $originalRow['comment']);
+        $this->assertEquals(5, $originalRow['stars']);
     }
 
     /** @test */
     public function it_ignores_null_values()
     {
-        $originalValue = (new ForeignKeyProcessor())->process([
+        $originalRow = (new ForeignKeyProcessor())->process([
             'name' => 'admin',
             'parent_role' => null,
         ]);
 
-        $this->assertEquals('admin', $originalValue['name']);
-        $this->assertNull($originalValue['parent_role']);
+        $this->assertEquals('admin', $originalRow['name']);
+        $this->assertNull($originalRow['parent_role']);
     }
 
     /** @test */
