@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Doctrine DBAL fixtures</title>
+
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/highlight.tomorrow-night.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="https://comphppuebla.github.io/dbal-fixtures/">
+                Doctrine DBAL fixtures
+                <small class="hidden-xs hidden-sm">
+                    Data fixtures generation without the ORM
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                                                    <p class="text-muted">
+                                Usage
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/quick-start.html">
+                                            Quick start
+                                        </a>
+                                    </li>
+                                                            </ul>
+                                                    <p class="text-muted">
+                                Full reference
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fixture-files.html">
+                                            Fixture files
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/foreign-keys.html">
+                                            Foreign keys
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/rows-generation.html">
+                                            Rows generation
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fake-data.html">
+                                            Fake data
+                                        </a>
+                                    </li>
+                                                            </ul>
+                                                    <p class="text-muted">
+                                Examples
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fixture-classes.html">
+                                            Fixture classes
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/seeders.html">
+                                            Seeders
+                                        </a>
+                                    </li>
+                                                            </ul>
+                        
+                    </nav>
+
+                
+                <section class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="rows-generation">Rows Generation</h1>
+<p>It is possible to generate more than one row in a definition by using the <strong>range</strong>
+notation <code>[first..last]</code>. </p>
+<p>The following example will insert six identical rows in the table <code>reviews</code>.
+It will relate each review to the station with the identifier <code>@station_1</code>.</p>
+<pre><code class="language-yaml">reviews:
+    review_[1..6]:
+        comment: "El servicio es muy malo"
+        stars: 2
+        station_id: "@station_1"</code></pre>
+                </section>
+
+            </div>
+        </main>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yandex.st/highlightjs/7.5/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

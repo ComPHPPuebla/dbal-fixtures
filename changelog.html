@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Doctrine DBAL fixtures</title>
+
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/highlight.tomorrow-night.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="https://comphppuebla.github.io/dbal-fixtures/">
+                Doctrine DBAL fixtures
+                <small class="hidden-xs hidden-sm">
+                    Data fixtures generation without the ORM
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                                                    <p class="text-muted">
+                                Usage
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/quick-start.html">
+                                            Quick start
+                                        </a>
+                                    </li>
+                                                            </ul>
+                                                    <p class="text-muted">
+                                Full reference
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fixture-files.html">
+                                            Fixture files
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/foreign-keys.html">
+                                            Foreign keys
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/rows-generation.html">
+                                            Rows generation
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fake-data.html">
+                                            Fake data
+                                        </a>
+                                    </li>
+                                                            </ul>
+                                                    <p class="text-muted">
+                                Examples
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fixture-classes.html">
+                                            Fixture classes
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/seeders.html">
+                                            Seeders
+                                        </a>
+                                    </li>
+                                                            </ul>
+                        
+                    </nav>
+
+                
+                <section class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="changelog">Changelog</h1>
+<h2 id="100---2014-10-08">1.0.0 - 2014-10-08</h2>
+<ul>
+<li>Replace <code>Zend/Config</code> package with <code>Symfony\Yaml</code> (<a href="https://github.com/ComPHPPuebla/dbal-fixtures/pull/1">#1</a>)</li>
+<li>Update Doctrine and Symfony packages to use <code>~2.4</code> version.</li>
+</ul>
+<h2 id="200---2016-09-17">2.0.0 - 2016-09-17</h2>
+<ul>
+<li>Switched to PSR-4 autoloading.</li>
+<li>Removed namespace Doctrine.</li>
+<li>Updated minimum PHP version to 5.6.</li>
+<li>Updated all the dependencies.</li>
+<li>Replaced XPMock with Prophecy in tests.</li>
+<li>Identifiers are quoted now by default.</li>
+<li>Make the the ForeignKeyParser a default value in YamlLoader constructor.</li>
+<li>Keep only the integration tests for the Persister class.</li>
+</ul>
+<h2 id="300---2017-03-13">3.0.0 - 2017-03-13</h2>
+<ul>
+<li>PSR-4 root namespace is now <code>ComPHPPuebla\Fixtures</code>.</li>
+<li>Updated minimum PHP version to 7.1.</li>
+<li>Update package dependencies.</li>
+<li>Add support to generate fake data using Faker.</li>
+<li>Added facade class <code>Fixture</code>, now you only need to call <code>load</code> on this object.</li>
+</ul>
+<h2 id="310---2017-06-20">3.1.0 - 2017-06-20</h2>
+<ul>
+<li>Added support to retrieve the rows inserted through the <code>Fixture#rows</code> method.</li>
+<li>Fixed issue: Non <code>AUTO_INCREMENT</code> primary keys are not overwritten anymore.</li>
+<li>Added ability to register specific platform types like <code>enum</code> in MySQL.</li>
+<li>Added ability to specify <code>null</code> values in the <code>yml</code> file.</li>
+</ul>
+<h2 id="311---2017-11-13">3.1.1 - 2017-11-13</h2>
+<ul>
+<li>Fixed issue with <code>ForeingKeyProcessor#isReference</code>. It failed to identify references
+in empty entries. See <a href="https://github.com/ComPHPPuebla/dbal-fixtures/issues/3">#3</a></li>
+</ul>
+                </section>
+
+            </div>
+        </main>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yandex.st/highlightjs/7.5/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

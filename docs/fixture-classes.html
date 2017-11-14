@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Doctrine DBAL fixtures</title>
+
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/highlight.tomorrow-night.css">
+        <link rel="stylesheet" href="https://comphppuebla.github.io/dbal-fixtures/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="https://comphppuebla.github.io/dbal-fixtures/">
+                Doctrine DBAL fixtures
+                <small class="hidden-xs hidden-sm">
+                    Data fixtures generation without the ORM
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                                                    <p class="text-muted">
+                                Usage
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/quick-start.html">
+                                            Quick start
+                                        </a>
+                                    </li>
+                                                            </ul>
+                                                    <p class="text-muted">
+                                Full reference
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fixture-files.html">
+                                            Fixture files
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/foreign-keys.html">
+                                            Foreign keys
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/rows-generation.html">
+                                            Rows generation
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fake-data.html">
+                                            Fake data
+                                        </a>
+                                    </li>
+                                                            </ul>
+                                                    <p class="text-muted">
+                                Examples
+                            </p>
+
+                            <ul class="nav nav-pills nav-stacked">
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/fixture-classes.html">
+                                            Fixture classes
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/seeders.html">
+                                            Seeders
+                                        </a>
+                                    </li>
+                                                            </ul>
+                        
+                    </nav>
+
+                
+                <section class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="fixture-classes">Fixture classes</h1>
+<p>After loading a fixture you have access to the inserted rows through the <code>Fixture#rows</code> method,
+this method returns the rows with the auto generated IDs created by the database. This is useful
+because: </p>
+<ol>
+<li>Now you can save some queries in your tests, and </li>
+<li>You can create fixture classes with method names related to the domain of your application.
+For instance, we could refer only the stations from Texas <code>$fixture-&gt;stationsInTexas()</code> or
+get access to all the administrator users <code>$fixture-&gt;administrators()</code>.</li>
+</ol>
+<p>Let's create an example. Suppose you have the following fixture file.</p>
+<pre><code class="language-yaml">stations:
+    station_[1..3]:
+        name: "${company}"
+        social_reason: "${bs}"
+        address_line_1: "${streetAddress}"
+        address_line_2: "${secondaryAddress}}"
+        location: "${city}"
+        latitude: "${latitude}"
+        longitude: "${longitude}"
+        created_at: "${date('Y-m-d H:i:s', 'yesterday')}"
+        last_updated_at: "${date('Y-m-d H:i:s')}"
+users:
+    user_1:
+        username: "montealegreluis@gmail.com"
+        password: "iL0ve_myJob"
+        state: "active"
+        roleName: "admin"</code></pre>
+<p>You could create a custom fixture class for your integration tests like the following.</p>
+<pre><code class="language-php">class StationsFixture
+{
+    /** @var Fixture */
+    private $fixture;
+
+    /** @var array */
+    private $rows;
+
+    public static function fromURL(string $url): StationsFixture
+    {
+        return new StationsFixture($url);
+    }
+
+    private function __construct(string $url)
+    {
+        $connection = new DBALConnection(DriverManager::getConnection(['url' =&gt; $url]));
+        $this-&gt;fixture = new Fixture($connection);
+        $this-&gt;rows = $this-&gt;fixture-&gt;rows();
+    }
+
+    public function adminUser(): array
+    {
+        return $this-&gt;rows['user_1'];
+    }
+
+    public function stations(): array
+    {
+        // Filter all the rows that have identifiers prefixed with `station_`
+        return array_filter($this-&gt;rows, function (array $key) {
+            return strpos($key, 'station_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+    }
+}</code></pre>
+<p>Then you could use it in your tests as follows.</p>
+<pre><code class="language-php">class StationsControllerTest extends TestCase
+{
+    use AuthenticatesUsers; // This could be a trait specific to your framework/application
+
+    private $fixture;
+
+    /** @test */
+    function it_shows_all_the_gas_stations_after_login()
+    {
+        $this-&gt;authenticatedAs($this-&gt;fixture-&gt;adminUser()); // This method belongs to the trait `AuthenticateUsers` 
+
+        // Query your database with your repository/mapper/table gateway, etc.
+        // $stations = ...
+
+        // Compare the result with the rows inserted by your fixture
+        $expectedStations = $this-&gt;fixture-&gt;stations();
+
+        $this-&gt;assertEquals($expectedStations, $stations); 
+    }
+
+    /** @before */
+    function configure(): void
+    {
+        $this-&gt;fixture = StationsFixture::fromURL('sqlite:///test.sq3');
+    }</code></pre>
+                </section>
+
+            </div>
+        </main>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yandex.st/highlightjs/7.5/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>
