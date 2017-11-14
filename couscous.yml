@@ -1,0 +1,39 @@
+title: Doctrine DBAL fixtures
+subTitle: Data fixtures generation without the ORM
+baseUrl: https://comphppuebla.github.io/dbal-fixtures
+template:
+  url: https://github.com/CouscousPHP/Template-Dark
+index: index.md
+
+menu:
+  sections:
+    main:
+      name: Usage
+      items:
+        quick_start:
+          text: Quick start
+          relativeUrl: docs/quick-start.html
+    full_reference:
+      name: Full reference
+      items:
+        fixture_files:
+          text: Fixture files
+          relativeUrl: docs/fixture-files.html
+        foreign_keys:
+          text: Foreign keys
+          relativeUrl: docs/foreign-keys.html
+        rows_generation:
+          text: Rows generation
+          relativeUrl: docs/rows-generation.html
+        fake_date:
+          text: Fake data
+          relativeUrl: docs/fake-data.html
+    examples:
+      name: Examples
+      items:
+        fixture_classes:
+          text: Fixture classes
+          relativeUrl: docs/fixture-classes.html
+        seeders:
+          text: Seeders
+          relativeUrl: docs/seeders.html

@@ -6,3 +6,6 @@ composer.lock
 
 # Examples
 /test_db.sq3
+
+# Docs
+/.couscous
