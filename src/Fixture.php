@@ -46,29 +46,46 @@ class Fixture
         $this->setProcessors($processors);
     }
 
-    public function load($pathToFixturesFile): void
+    public function rows(): array
+    {
+        return $this->rows;
+    }
+
+    public function load(string $pathToFixturesFile): void
     {
         $tables = $this->loader->load($pathToFixturesFile);
 
         foreach ($tables as $table => $rows) {
-            $primaryKey = $this->connection->getPrimaryKeyOf($table);
-            $generatedRows = $this->generator->generate($rows);
-            foreach ($generatedRows as $key => $row) {
-                foreach ($this->processors as $processor) {
-                    $row = $processor->process($row);
-                }
-                $id = $this->connection->insert($table, $row);
-                $this->rows[$key] = $this->assignGeneratedKey($primaryKey, $id, $row);
-                foreach ($this->processors as $processor) {
-                    $processor->postProcessing($key, $id);
-                }
-            }
+            $this->processTableRows($table, $rows);
         }
     }
 
-    public function rows(): array
+    private function processTableRows(string $table, array $rows): void
     {
-        return $this->rows;
+        $primaryKey = $this->connection->getPrimaryKeyOf($table);
+        $generatedRows = $this->generator->generate($rows);
+        foreach ($generatedRows as $identifier => $row) {
+            $this->processRow($table, $primaryKey, $row, $identifier);
+        }
+    }
+
+    private function processRow(
+        string $table,
+        string $primaryKey,
+        array $row,
+        string $identifier
+    ): void
+    {
+        foreach ($this->processors as $processor) {
+            $row = $processor->process($row);
+        }
+
+        $id = $this->connection->insert($table, $row);
+        $this->rows[$identifier] = $this->assignGeneratedKey($primaryKey, $id, $row);
+
+        foreach ($this->processors as $processor) {
+            $processor->postProcessing($identifier, $id);
+        }
     }
 
     private function assignGeneratedKey(string $column, int $id, array $row): array
