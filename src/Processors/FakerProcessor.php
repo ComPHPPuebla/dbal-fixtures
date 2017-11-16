@@ -6,6 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures\Processors;
 
+use ComPHPPuebla\Fixtures\Connections\Row;
 use Faker\Generator;
 
 class FakerProcessor implements Processor
@@ -20,27 +21,23 @@ class FakerProcessor implements Processor
         $this->generator = $generator;
     }
 
-    public function process(array $row): array
+    public function process(Row $row): void
     {
-        $processedRow = [];
-        foreach ($row as $column => $value) {
-            if ($value !== null && $this->isFakerFormatter($value)) {
-                $processedRow[$column] = $this->callFormatter($value);
-            } else {
-                $processedRow[$column] = $row[$column];
+        foreach ($row->values() as $column => $value) {
+            if ($this->isFakerFormatter($value)) {
+                $row->changeColumnValue($column, $this->callFormatter($value));
             }
         }
-        return $processedRow;
     }
 
-    public function postProcessing(string $key, int $id): void
+    public function postProcessing(Row $row): void
     {
         // Nothing to do...
     }
 
-    private function isFakerFormatter(string $value): bool
+    private function isFakerFormatter(?string $value): bool
     {
-        return 1 === preg_match($this->formatterRegExp, $value);
+        return $value !== null && 1 === preg_match($this->formatterRegExp, $value);
     }
 
     /**

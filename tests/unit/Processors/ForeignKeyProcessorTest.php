@@ -6,115 +6,140 @@
  */
 namespace ComPHPPuebla\Fixtures\Processors;
 
+use ComPHPPuebla\Fixtures\Connections\Row;
 use PHPUnit\Framework\TestCase;
 
 class ForeignKeyProcessorTest extends TestCase
 {
+    /** @before */
+    function createProcessor()
+    {
+        $this->processor = new ForeignKeyProcessor();
+    }
+
     /** @test */
     public function it_parses_a_foreign_key()
     {
-        $processor = new ForeignKeyProcessor();
-        $processor->postProcessing('station_1', 1);
+        $station = new Row('id', 'station_1', ['id' => 1]);
+        $this->processor->postProcessing($station);
 
-
-        $processedRow = $processor->process([
+        $row = new Row('', '', [
             'comment' => 'El servicio es excelente',
             'stars' => 5,
             'station_id' => '@station_1',
         ]);
 
-        $this->assertEquals(1, $processedRow['station_id']);
+        $this->processor->process($row);
+
+        $this->assertEquals($station->id(), $row->valueOf('station_id'));
     }
 
     /** @test */
     public function it_replaces_several_times_the_same_key()
     {
-        $processor = new ForeignKeyProcessor();
-        $processor->postProcessing('station_1', 1);
+        $station = new Row('id', 'station_1', ['id' => 1]);
+        $this->processor->postProcessing($station);
 
-
-        $firstComment = $processor->process([
+        $firstComment = new Row('', '', [
             'comment' => 'El servicio es excelente',
             'stars' => 5,
             'station_id' => '@station_1',
         ]);
-        $secondComment = $processor->process([
+        $secondComment = new Row('', '', [
             'comment' => 'El servicio es pésimo',
             'stars' => 0,
             'station_id' => '@station_1',
         ]);
-        $thirdComment = $processor->process([
+        $thirdComment = new Row('', '', [
             'comment' => 'El servicio es regular',
             'stars' => 2,
             'station_id' => '@station_1',
         ]);
 
-        $this->assertEquals(1, $firstComment['station_id']);
-        $this->assertEquals(1, $secondComment['station_id']);
-        $this->assertEquals(1, $thirdComment['station_id']);
+        $this->processor->process($firstComment);
+        $this->processor->process($secondComment);
+        $this->processor->process($thirdComment);
+
+        $this->assertEquals($station->id(), $firstComment->valueOf('station_id'));
+        $this->assertEquals($station->id(), $secondComment->valueOf('station_id'));
+        $this->assertEquals($station->id(), $thirdComment->valueOf('station_id'));
     }
 
     /** @test */
     public function it_replaces_several_keys()
     {
-        $processor = new ForeignKeyProcessor();
-        $processor->postProcessing('station_1', 1);
-        $processor->postProcessing('station_2', 2);
+        $firstStation = new Row('id', 'station_1', ['id' => 1]);
+        $secondStation = new Row('id', 'station_2', ['id' => 2]);
+        $this->processor->postProcessing($firstStation);
+        $this->processor->postProcessing($secondStation);
 
-        $firstComment = $processor->process([
+        $firstComment = new Row('', '', [
             'comment' => 'El servicio es excelente',
             'stars' => 5,
             'station_id' => '@station_1',
         ]);
-        $secondComment = $processor->process([
+        $secondComment = new Row('', '', [
             'comment' => 'El servicio es pésimo',
             'stars' => 0,
             'station_id' => '@station_2',
         ]);
-        $thirdComment = $processor->process([
+        $thirdComment = new Row('', '', [
             'comment' => 'El servicio es regular',
             'stars' => 2,
             'station_id' => '@station_1',
         ]);
 
-        $this->assertEquals(1, $firstComment['station_id']);
-        $this->assertEquals(2, $secondComment['station_id']);
-        $this->assertEquals(1, $thirdComment['station_id']);
+        $this->processor->process($firstComment);
+        $this->processor->process($secondComment);
+        $this->processor->process($thirdComment);
+
+        $this->assertEquals($firstStation->id(), $firstComment->valueOf('station_id'));
+        $this->assertEquals($secondStation->id(), $secondComment->valueOf('station_id'));
+        $this->assertEquals($firstStation->id(), $thirdComment->valueOf('station_id'));
     }
 
     /** @test */
     public function it_ignores_entries_without_foreign_keys()
     {
-        $originalRow = (new ForeignKeyProcessor())->process([
-            'comment' => 'El servicio es excelente',
+        $originalRow = new Row('', '', [
+            'comment' => 'Excelente servicio',
             'stars' => 5,
         ]);
 
-        $this->assertEquals('El servicio es excelente', $originalRow['comment']);
-        $this->assertEquals(5, $originalRow['stars']);
+        $this->processor->process($originalRow);
+
+        $this->assertEquals('Excelente servicio', $originalRow->valueOf('comment'));
+        $this->assertEquals(5, $originalRow->valueOf('stars'));
     }
 
     /** @test */
     public function it_ignores_null_values()
     {
-        $originalRow = (new ForeignKeyProcessor())->process([
+        $originalRow = new Row('', '', [
             'name' => 'admin',
             'parent_role' => null,
         ]);
 
-        $this->assertEquals('admin', $originalRow['name']);
-        $this->assertNull($originalRow['parent_role']);
+        $this->processor->process($originalRow);
+
+        $this->assertEquals('admin', $originalRow->valueOf('name'));
+        $this->assertNull($originalRow->valueOf('parent_role'));
     }
 
     /** @test */
     public function it_ignores_entries_with_empty_strings()
     {
-        $originalRow = (new ForeignKeyProcessor())->process([
+        $originalRow = new Row('', '', [
             'comment' => '',
             'stars' => 5,
         ]);
 
-        $this->assertEquals('', $originalRow['comment']);
-        $this->assertEquals(5, $originalRow['stars']);
+        $this->processor->process($originalRow);
+
+        $this->assertEquals('', $originalRow->valueOf('comment'));
+        $this->assertEquals(5, $originalRow->valueOf('stars'));
     }
+
+    /** @var ForeignKeyProcessor */
+    private $processor;
 }

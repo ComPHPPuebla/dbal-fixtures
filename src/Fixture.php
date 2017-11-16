@@ -6,6 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures;
 
+use ComPHPPuebla\Fixtures\Connections\Row;
 use ComPHPPuebla\Fixtures\Generators\RangeGenerator;
 use ComPHPPuebla\Fixtures\Loaders\Loader;
 use ComPHPPuebla\Fixtures\Connections\Connection;
@@ -65,35 +66,23 @@ class Fixture
         $primaryKey = $this->connection->getPrimaryKeyOf($table);
         $generatedRows = $this->generator->generate($rows);
         foreach ($generatedRows as $identifier => $row) {
-            $this->processRow($table, $primaryKey, $row, $identifier);
+            $this->processRow($table, new Row($primaryKey, $identifier, $row));
         }
     }
 
-    private function processRow(
-        string $table,
-        string $primaryKey,
-        array $row,
-        string $identifier
-    ): void
+    private function processRow(string $table, Row $row): void
     {
         foreach ($this->processors as $processor) {
-            $row = $processor->process($row);
+            $processor->process($row);
         }
 
-        $id = $this->connection->insert($table, $row);
-        $this->rows[$identifier] = $this->assignGeneratedKey($primaryKey, $id, $row);
+        $id = $this->connection->insert($table, $row->values());
+        $row->assignId($id);
+        $this->rows[$row->identifier()] = $row->values();
 
         foreach ($this->processors as $processor) {
-            $processor->postProcessing($identifier, $id);
+            $processor->postProcessing($row);
         }
-    }
-
-    private function assignGeneratedKey(string $column, int $id, array $row): array
-    {
-        if (isset($row[$column])) return $row; // This is not an auto-generated key
-
-        $row[$column] = $id;
-        return $row;
     }
 
     /**

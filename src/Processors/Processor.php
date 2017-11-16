@@ -6,9 +6,11 @@
  */
 namespace ComPHPPuebla\Fixtures\Processors;
 
+use ComPHPPuebla\Fixtures\Connections\Row;
+
 interface Processor
 {
-    public function process(array $row): array;
+    public function process(Row $row): void;
 
-    public function postProcessing(string $key, int $id): void;
+    public function postProcessing(Row $row): void;
 }

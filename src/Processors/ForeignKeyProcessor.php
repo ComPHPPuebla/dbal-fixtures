@@ -6,6 +6,8 @@
  */
 namespace ComPHPPuebla\Fixtures\Processors;
 
+use ComPHPPuebla\Fixtures\Connections\Row;
+
 class ForeignKeyProcessor implements Processor
 {
     /** @var array */
@@ -16,27 +18,23 @@ class ForeignKeyProcessor implements Processor
         $this->references = [];
     }
 
-    public function process(array $row): array
+    public function process(Row $row): void
     {
-        $processedRows = [];
-        foreach ($row as $column => $value) {
-            if (null === $value) {
-                $processedRows[$column] = $value;
-                continue;
+        foreach ($row->values() as $column => $value) {
+            if (null !== $value) {
+                $row->changeColumnValue($column, $this->parseKeyIfNeeded($value));
             }
-            $processedRows[$column] = $this->parseKeyIfNeeded($value);
         }
-        return $processedRows;
     }
 
-    public function postProcessing(string $key, int $id): void
+    public function postProcessing(Row $row): void
     {
-        $this->addReference($key, $id);
+        $this->addReference($row->identifier(), $row->id());
     }
 
-    private function addReference(string $key, int $id)
+    private function addReference(string $identifier, $id)
     {
-        $this->references[$key] = $id;
+        $this->references[$identifier] = $id;
     }
 
     /**
@@ -52,11 +50,7 @@ class ForeignKeyProcessor implements Processor
 
     private function isAReference(string $value): bool
     {
-        if (empty($value)) {
-            return false;
-        }
-
-        return '@' === $value[0];
+        return !empty($value) && '@' === $value[0];
     }
 
     private function referenceExistsFor(string $value): bool

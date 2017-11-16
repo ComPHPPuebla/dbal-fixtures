@@ -6,6 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures\Processors;
 
+use ComPHPPuebla\Fixtures\Connections\Row;
 use Faker\Generator;
 use PHPUnit\Framework\TestCase;
 
@@ -16,8 +17,9 @@ class FakerProcessorTest extends TestCase
     {
         $generator = $this->prophesize(Generator::class);
         $processor = new FakerProcessor($generator->reveal());
+        $row = new Row('', '', ['first_name' => '${firstName}']);
 
-        $processor->process(['first_name' => '${firstName}']);
+        $processor->process($row);
 
         $generator->format('firstName')->shouldHaveBeenCalled();
     }
@@ -27,8 +29,9 @@ class FakerProcessorTest extends TestCase
     {
         $generator = $this->prophesize(Generator::class);
         $processor = new FakerProcessor($generator->reveal());
+        $row = new Row('', '', ['title' => '${title(\'female\')}']);
 
-        $processor->process(['title' => '${title(\'female\')}']);
+        $processor->process($row);
 
         $generator->format('title', ['female'])->shouldHaveBeenCalled();
     }
@@ -38,8 +41,9 @@ class FakerProcessorTest extends TestCase
     {
         $generator = $this->prophesize(Generator::class);
         $processor = new FakerProcessor($generator->reveal());
+        $row = new Row('', '', ['image' => '${imageUrl(100, 200, \'dogs\')}']);
 
-        $processor->process(['image' => '${imageUrl(100, 200, \'dogs\')}']);
+        $processor->process($row);
 
         $generator->format('imageUrl', [100, 200, 'dogs'])->shouldHaveBeenCalled();
     }
@@ -49,12 +53,13 @@ class FakerProcessorTest extends TestCase
     {
         $generator = $this->prophesize(Generator::class);
         $processor = new FakerProcessor($generator->reveal());
-
-        $processor->process([
+        $row = new Row('', '', [
             'first_name' => '${firstName}',
             'title' => '${title(\'female\')}',
             'image' => '${imageUrl(100, 200, \'dogs\')}'
         ]);
+
+        $processor->process($row);
 
         $generator->format('firstName')->shouldHaveBeenCalled();
         $generator->format('title', ['female'])->shouldHaveBeenCalled();
