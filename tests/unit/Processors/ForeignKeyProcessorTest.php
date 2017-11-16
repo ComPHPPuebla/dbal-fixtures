@@ -21,7 +21,7 @@ class ForeignKeyProcessorTest extends TestCase
     public function it_parses_a_foreign_key()
     {
         $station = new Row('id', 'station_1', ['id' => 1]);
-        $this->processor->postProcessing($station);
+        $this->processor->afterInsert($station);
 
         $row = new Row('', '', [
             'comment' => 'El servicio es excelente',
@@ -29,7 +29,7 @@ class ForeignKeyProcessorTest extends TestCase
             'station_id' => '@station_1',
         ]);
 
-        $this->processor->process($row);
+        $this->processor->beforeInsert($row);
 
         $this->assertEquals($station->id(), $row->valueOf('station_id'));
     }
@@ -38,7 +38,7 @@ class ForeignKeyProcessorTest extends TestCase
     public function it_replaces_several_times_the_same_key()
     {
         $station = new Row('id', 'station_1', ['id' => 1]);
-        $this->processor->postProcessing($station);
+        $this->processor->afterInsert($station);
 
         $firstComment = new Row('', '', [
             'comment' => 'El servicio es excelente',
@@ -56,9 +56,9 @@ class ForeignKeyProcessorTest extends TestCase
             'station_id' => '@station_1',
         ]);
 
-        $this->processor->process($firstComment);
-        $this->processor->process($secondComment);
-        $this->processor->process($thirdComment);
+        $this->processor->beforeInsert($firstComment);
+        $this->processor->beforeInsert($secondComment);
+        $this->processor->beforeInsert($thirdComment);
 
         $this->assertEquals($station->id(), $firstComment->valueOf('station_id'));
         $this->assertEquals($station->id(), $secondComment->valueOf('station_id'));
@@ -70,8 +70,8 @@ class ForeignKeyProcessorTest extends TestCase
     {
         $firstStation = new Row('id', 'station_1', ['id' => 1]);
         $secondStation = new Row('id', 'station_2', ['id' => 2]);
-        $this->processor->postProcessing($firstStation);
-        $this->processor->postProcessing($secondStation);
+        $this->processor->afterInsert($firstStation);
+        $this->processor->afterInsert($secondStation);
 
         $firstComment = new Row('', '', [
             'comment' => 'El servicio es excelente',
@@ -89,9 +89,9 @@ class ForeignKeyProcessorTest extends TestCase
             'station_id' => '@station_1',
         ]);
 
-        $this->processor->process($firstComment);
-        $this->processor->process($secondComment);
-        $this->processor->process($thirdComment);
+        $this->processor->beforeInsert($firstComment);
+        $this->processor->beforeInsert($secondComment);
+        $this->processor->beforeInsert($thirdComment);
 
         $this->assertEquals($firstStation->id(), $firstComment->valueOf('station_id'));
         $this->assertEquals($secondStation->id(), $secondComment->valueOf('station_id'));
@@ -106,7 +106,7 @@ class ForeignKeyProcessorTest extends TestCase
             'stars' => 5,
         ]);
 
-        $this->processor->process($originalRow);
+        $this->processor->beforeInsert($originalRow);
 
         $this->assertEquals('Excelente servicio', $originalRow->valueOf('comment'));
         $this->assertEquals(5, $originalRow->valueOf('stars'));
@@ -120,7 +120,7 @@ class ForeignKeyProcessorTest extends TestCase
             'parent_role' => null,
         ]);
 
-        $this->processor->process($originalRow);
+        $this->processor->beforeInsert($originalRow);
 
         $this->assertEquals('admin', $originalRow->valueOf('name'));
         $this->assertNull($originalRow->valueOf('parent_role'));
@@ -134,7 +134,7 @@ class ForeignKeyProcessorTest extends TestCase
             'stars' => 5,
         ]);
 
-        $this->processor->process($originalRow);
+        $this->processor->beforeInsert($originalRow);
 
         $this->assertEquals('', $originalRow->valueOf('comment'));
         $this->assertEquals(5, $originalRow->valueOf('stars'));

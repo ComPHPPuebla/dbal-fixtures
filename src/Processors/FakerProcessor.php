@@ -9,7 +9,7 @@ namespace ComPHPPuebla\Fixtures\Processors;
 use ComPHPPuebla\Fixtures\Database\Row;
 use Faker\Generator;
 
-class FakerProcessor implements Processor
+class FakerProcessor implements PreProcessor
 {
     private $formatterRegExp = '/\$\{(\w+)(?:\(([^\)]+)\))?\}/i';
 
@@ -21,18 +21,13 @@ class FakerProcessor implements Processor
         $this->generator = $generator;
     }
 
-    public function process(Row $row): void
+    public function beforeInsert(Row $row): void
     {
         foreach ($row->values() as $column => $value) {
             if ($this->isFakerFormatter($value)) {
                 $row->changeColumnValue($column, $this->callFormatter($value));
             }
         }
-    }
-
-    public function postProcessing(Row $row): void
-    {
-        // Nothing to do...
     }
 
     private function isFakerFormatter(?string $value): bool

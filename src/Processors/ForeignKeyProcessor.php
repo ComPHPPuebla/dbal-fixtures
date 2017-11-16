@@ -8,7 +8,7 @@ namespace ComPHPPuebla\Fixtures\Processors;
 
 use ComPHPPuebla\Fixtures\Database\Row;
 
-class ForeignKeyProcessor implements Processor
+class ForeignKeyProcessor implements PreProcessor, PostProcessor
 {
     /** @var array */
     protected $references;
@@ -18,7 +18,7 @@ class ForeignKeyProcessor implements Processor
         $this->references = [];
     }
 
-    public function process(Row $row): void
+    public function beforeInsert(Row $row): void
     {
         foreach ($row->values() as $column => $value) {
             if (null !== $value) {
@@ -27,7 +27,7 @@ class ForeignKeyProcessor implements Processor
         }
     }
 
-    public function postProcessing(Row $row): void
+    public function afterInsert(Row $row): void
     {
         $this->addReference($row->identifier(), $row->id());
     }

@@ -8,9 +8,7 @@ namespace ComPHPPuebla\Fixtures\Processors;
 
 use ComPHPPuebla\Fixtures\Database\Row;
 
-interface Processor
+interface PostProcessor
 {
-    public function process(Row $row): void;
-
-    public function postProcessing(Row $row): void;
+    public function afterInsert(Row $row): void;
 }

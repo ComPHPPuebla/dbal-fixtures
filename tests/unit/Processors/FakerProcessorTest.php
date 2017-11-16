@@ -19,7 +19,7 @@ class FakerProcessorTest extends TestCase
         $processor = new FakerProcessor($generator->reveal());
         $row = new Row('', '', ['first_name' => '${firstName}']);
 
-        $processor->process($row);
+        $processor->beforeInsert($row);
 
         $generator->format('firstName')->shouldHaveBeenCalled();
     }
@@ -31,7 +31,7 @@ class FakerProcessorTest extends TestCase
         $processor = new FakerProcessor($generator->reveal());
         $row = new Row('', '', ['title' => '${title(\'female\')}']);
 
-        $processor->process($row);
+        $processor->beforeInsert($row);
 
         $generator->format('title', ['female'])->shouldHaveBeenCalled();
     }
@@ -43,7 +43,7 @@ class FakerProcessorTest extends TestCase
         $processor = new FakerProcessor($generator->reveal());
         $row = new Row('', '', ['image' => '${imageUrl(100, 200, \'dogs\')}']);
 
-        $processor->process($row);
+        $processor->beforeInsert($row);
 
         $generator->format('imageUrl', [100, 200, 'dogs'])->shouldHaveBeenCalled();
     }
@@ -59,7 +59,7 @@ class FakerProcessorTest extends TestCase
             'image' => '${imageUrl(100, 200, \'dogs\')}'
         ]);
 
-        $processor->process($row);
+        $processor->beforeInsert($row);
 
         $generator->format('firstName')->shouldHaveBeenCalled();
         $generator->format('title', ['female'])->shouldHaveBeenCalled();

@@ -14,7 +14,8 @@ use ComPHPPuebla\Fixtures\Generators\Generator;
 use ComPHPPuebla\Fixtures\Loaders\YamlLoader;
 use ComPHPPuebla\Fixtures\Processors\FakerProcessor;
 use ComPHPPuebla\Fixtures\Processors\ForeignKeyProcessor;
-use ComPHPPuebla\Fixtures\Processors\Processor;
+use ComPHPPuebla\Fixtures\Processors\PostProcessor;
+use ComPHPPuebla\Fixtures\Processors\PreProcessor;
 use Faker\Factory;
 
 class Fixture
@@ -25,8 +26,11 @@ class Fixture
     /** @var Generator */
     private $generator;
 
-    /** @var Processor[] */
-    private $processors;
+    /** @var PreProcessor[] */
+    private $preProcessors;
+
+    /** @var PostProcessor[] */
+    private $postProcessors;
 
     /** @var Connection */
     private $connection;
@@ -38,13 +42,14 @@ class Fixture
         Connection $connection,
         Loader $loader = null,
         Generator $generator = null,
-        array $processors = []
+        array $preProcessors = [],
+        array $postProcessors = []
     )
     {
         $this->connection = $connection;
         $this->loader = $loader ?? new YamlLoader();
         $this->generator = $generator ?? new RangeGenerator();
-        $this->setProcessors($processors);
+        $this->setProcessors($preProcessors, $postProcessors);
     }
 
     public function rows(): array
@@ -72,26 +77,31 @@ class Fixture
 
     private function processRow(string $table, Row $row): void
     {
-        foreach ($this->processors as $processor) {
-            $processor->process($row);
+        foreach ($this->preProcessors as $processor) {
+            $processor->beforeInsert($row);
         }
 
         $this->connection->insert($table, $row);
         $this->rows[$row->identifier()] = $row->values();
 
-        foreach ($this->processors as $processor) {
-            $processor->postProcessing($row);
+        foreach ($this->postProcessors as $processor) {
+            $processor->afterInsert($row);
         }
     }
 
     /**
-     * @param Processor[] $processors
+     * @param PreProcessor[] $preProcessors
+     * @param PostProcessor[] $postProcessors
      */
-    private function setProcessors(array $processors): void
+    private function setProcessors(array $preProcessors, array $postProcessors): void
     {
-        $this->processors = empty($processors) ? [
-            new ForeignKeyProcessor(),
+        $foreignKeyProcessor = new ForeignKeyProcessor();
+        $this->preProcessors = array_merge($preProcessors, [
+            $foreignKeyProcessor,
             new FakerProcessor(Factory::create())
-        ] : $processors;
+        ]);
+        $this->postProcessors = array_merge($postProcessors, [
+            $foreignKeyProcessor,
+        ]);
     }
 }
