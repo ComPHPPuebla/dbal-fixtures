@@ -26,7 +26,11 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ComPHPPuebla\\Fixtures\\": "tests/src"
+            "ComPHPPuebla\\Fixtures\\": [
+                "tests/integration",
+                "tests/src",
+                "tests/unit"
+            ]
         }
     },
     "config": {
