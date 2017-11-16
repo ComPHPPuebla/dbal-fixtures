@@ -25,12 +25,13 @@ class DBALConnectionTest extends TestCase
         $dbalConnection->insert('stations', Argument::type('array'))->shouldBeCalled();
         $connection = new DBALConnection($dbalConnection->reveal());
 
-        $newId = $connection->insert('stations', [
+        $station = new Row('id', 'stations', [
             'comment' => 'El servicio es excelente',
             'stars' => 5,
             'station_id' => '1',
         ]);
+        $connection->insert('stations', $station);
 
-        $this->assertEquals(1, $newId);
+        $this->assertEquals(1, $station->id());
     }
 }

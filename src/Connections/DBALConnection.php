@@ -18,10 +18,10 @@ class DBALConnection implements Connection
         $this->connection = $connection;
     }
 
-    public function insert(string $table, array $row): int
+    public function insert(string $table, Row $row): void
     {
-        $this->connection->insert($table, $this->quoteIdentifiers($row));
-        return $this->connection->lastInsertId();
+        $this->connection->insert($table, $this->quoteIdentifiers($row->values()));
+        $row->assignId($this->connection->lastInsertId());
     }
 
     private function quoteIdentifiers(array $row): array

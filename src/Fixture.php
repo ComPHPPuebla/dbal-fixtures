@@ -76,8 +76,7 @@ class Fixture
             $processor->process($row);
         }
 
-        $id = $this->connection->insert($table, $row->values());
-        $row->assignId($id);
+        $this->connection->insert($table, $row);
         $this->rows[$row->identifier()] = $row->values();
 
         foreach ($this->processors as $processor) {
