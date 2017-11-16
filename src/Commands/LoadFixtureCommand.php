@@ -10,7 +10,7 @@ use ComPHPPuebla\Fixtures\Fixture;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\{InputInterface, InputArgument};
 use Symfony\Component\Console\Output\OutputInterface;
-use ComPHPPuebla\Fixtures\Connections\DBALConnection;
+use ComPHPPuebla\Fixtures\Database\DBALConnection;
 use InvalidArgumentException;
 
 /**

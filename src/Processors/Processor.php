@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures\Processors;
 
-use ComPHPPuebla\Fixtures\Connections\Row;
+use ComPHPPuebla\Fixtures\Database\Row;
 
 interface Processor
 {

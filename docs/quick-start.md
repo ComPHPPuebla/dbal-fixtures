@@ -41,7 +41,7 @@ reviews:
 
 ```php
 use Doctrine\DBAL\DriverManager;
-use ComPHPPuebla\Fixtures\Connections\DBALConnection;
+use ComPHPPuebla\Fixtures\Database\DBALConnection;
 use ComPHPPuebla\Fixtures\Fixture;
 
 $connection = DriverManager::getConnection([

@@ -6,10 +6,10 @@
  */
 namespace ComPHPPuebla\Fixtures;
 
-use ComPHPPuebla\Fixtures\Connections\Row;
+use ComPHPPuebla\Fixtures\Database\Row;
 use ComPHPPuebla\Fixtures\Generators\RangeGenerator;
 use ComPHPPuebla\Fixtures\Loaders\Loader;
-use ComPHPPuebla\Fixtures\Connections\Connection;
+use ComPHPPuebla\Fixtures\Database\Connection;
 use ComPHPPuebla\Fixtures\Generators\Generator;
 use ComPHPPuebla\Fixtures\Loaders\YamlLoader;
 use ComPHPPuebla\Fixtures\Processors\FakerProcessor;

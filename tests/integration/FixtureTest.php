@@ -6,7 +6,7 @@
  */
 namespace ComPHPPuebla\Fixtures;
 
-use ComPHPPuebla\Fixtures\Connections\DBALConnection;
+use ComPHPPuebla\Fixtures\Database\DBALConnection;
 use PHPUnit\Framework\TestCase;
 
 class FixtureTest extends TestCase
