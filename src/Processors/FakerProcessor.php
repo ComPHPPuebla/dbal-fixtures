@@ -11,8 +11,6 @@ use Faker\Generator;
 
 class FakerProcessor implements PreProcessor
 {
-    private $formatterRegExp = '/\$\{(\w+)(?:\(([^\)]+)\))?\}/i';
-
     /** @var Generator */
     private $generator;
 
@@ -24,60 +22,14 @@ class FakerProcessor implements PreProcessor
     public function beforeInsert(Row $row): void
     {
         foreach ($row->values() as $column => $value) {
-            if ($this->isFakerFormatter($value)) {
-                $row->changeColumnValue($column, $this->callFormatter($value));
-            }
+            $this->generateFakeDataIfNeeded($row, $column, $value);
         }
     }
 
-    private function isFakerFormatter(?string $value): bool
+    private function generateFakeDataIfNeeded(Row $row, string $column, ?string $value): void
     {
-        return $value !== null && 1 === preg_match($this->formatterRegExp, $value);
-    }
+        if (!FormatterCall::matches($value)) return;
 
-    /**
-     * @return mixed
-     */
-    private function callFormatter(string $value)
-    {
-        $methodCall = [];
-        preg_match($this->formatterRegExp, $value, $methodCall);
-
-        if (count($methodCall) === 2) {
-            return $this->callWithNoParameters($methodCall[1]);
-        }
-
-        return $this->call($methodCall);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function call(array $callDefinition)
-    {
-        array_shift($callDefinition);
-        [$formatter, $arguments] = $callDefinition;
-
-        return $this->generator->format(
-            $formatter,
-            $this->parseArguments($arguments)
-        );
-    }
-
-    /**
-     * @return mixed
-     */
-    private function callWithNoParameters(string $formatter)
-    {
-        return $this->generator->format($formatter);
-    }
-
-    private function parseArguments($arguments): array
-    {
-        return array_map(function ($argument) {
-                return str_replace(['\'', '"'], '', $argument);
-            },
-            array_map('trim', explode(',', $arguments))
-        );
+        $row->changeColumnValue($column, FormatterCall::from($value)->run($this->generator));
     }
 }

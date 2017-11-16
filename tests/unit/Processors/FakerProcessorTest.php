@@ -21,7 +21,7 @@ class FakerProcessorTest extends TestCase
 
         $processor->beforeInsert($row);
 
-        $generator->format('firstName')->shouldHaveBeenCalled();
+        $generator->format('firstName', [])->shouldHaveBeenCalled();
     }
 
     /** @test */
@@ -61,7 +61,7 @@ class FakerProcessorTest extends TestCase
 
         $processor->beforeInsert($row);
 
-        $generator->format('firstName')->shouldHaveBeenCalled();
+        $generator->format('firstName', [])->shouldHaveBeenCalled();
         $generator->format('title', ['female'])->shouldHaveBeenCalled();
         $generator->format('imageUrl', [100, 200, 'dogs'])->shouldHaveBeenCalled();
     }
