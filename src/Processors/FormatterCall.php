@@ -18,11 +18,17 @@ class FormatterCall
     /** @var string */
     private $arguments;
 
+    /**
+     * It calls the formatter, on the given generator, with the arguments defined in this call object
+     */
     public function run(Generator $generator)
     {
         return $generator->format($this->formatter, $this->parseArguments());
     }
 
+    /**
+     * A valid formatter definition matches the pattern `${formatter(arg_1..arg_n)}`
+     */
     public static function matches(?string $value): bool
     {
         return $value !== null && 1 === preg_match(self::FORMATTER_PATTERN, $value);
@@ -33,7 +39,7 @@ class FormatterCall
         return new FormatterCall($definition);
     }
 
-    public function __construct(string $definition)
+    private function __construct(string $definition)
     {
         [$this->formatter, $this->arguments] = $this->parseDefinition($definition);
     }
@@ -52,12 +58,21 @@ class FormatterCall
         return $callDefinition;
     }
 
+    /**
+     * The parsing arguments process can be described as follows
+     *
+     * - Split the list of arguments `arg_1,...,arg_n` using the comma as delimiter
+     * - Trim the individual argument values
+     * - Remove the quotes from the arguments' values if present
+     */
     private function parseArguments(): array
     {
-        $arguments = explode(',', $this->arguments);
-        $excludeEmptyStrings = array_filter($arguments);
-        $trimmedArguments = array_map('trim', $excludeEmptyStrings);
+        if (empty($this->arguments)) {
+            return [];
+        }
 
+        $arguments = explode(',', $this->arguments);
+        $trimmedArguments = array_map('trim', $arguments);
         return array_map(
             function ($argument) {
                 $argumentWithoutQuotes = str_replace(['\'', '"'], '', $argument);

@@ -19,6 +19,10 @@ class FakerProcessor implements PreProcessor
         $this->generator = $generator;
     }
 
+    /**
+     * It will generate fake data for every column with a formatter definition
+     * `${formatter(arg_1...arg_n)}`
+     */
     public function beforeInsert(Row $row): void
     {
         foreach ($row->values() as $column => $value) {

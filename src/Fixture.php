@@ -57,6 +57,23 @@ class Fixture
         return $this->rows;
     }
 
+    /**
+     * Parse the fixture file and insert the rows in the configured database
+     *
+     * The process to parse a fixture file is as follows
+     *
+     * 1. It converts the content of the file to an associative array
+     * 2. It process the rows for every table
+     *   a. It generates the rows if the row identifier is a range definition
+     *   b. It runs the pre-processors for each row
+     *      * The foreign key processor replaces any reference `@reference` with a real database ID
+     *      * The faker processor will replace any formatter `formatter(arg_1..arg_n)` with fake
+     *        data
+     *   c. It inserts the row in the database and assigns the auto generated ID to the row if any
+     *   d. It runs the post-processors for each row
+     *      * The foreign key processor will save the generated database ID for the rows that might
+     *        use it as reference, in the pre-insert face
+     */
     public function load(string $pathToFixturesFile): void
     {
         $tables = $this->loader->load($pathToFixturesFile);

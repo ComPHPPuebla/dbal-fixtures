@@ -23,7 +23,7 @@ class RangeGenerator implements Generator
         return $generatedRows;
     }
 
-    private function generateRowsIfNeeded($identifier, $row, $rows): array
+    private function generateRowsIfNeeded(string $identifier, array $row, array $rows): array
     {
         if (Range::isRange($identifier)) {
             $rows += Range::from($identifier)->generate($row, $identifier);
