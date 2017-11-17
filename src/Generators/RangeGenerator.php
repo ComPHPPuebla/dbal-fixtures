@@ -8,28 +8,28 @@ namespace ComPHPPuebla\Fixtures\Generators;
 
 class RangeGenerator implements Generator
 {
+    /**
+     * If any of the rows contain a range definition (`[start..end]`) it will generate the amount
+     * of rows defined by the range
+     *
+     * It will ignore rows without range definitions
+     */
     public function generate(array $rows): array
     {
-        $modifiedRows = [];
-        foreach ($rows as $key => $row) {
-            if (Range::isRange($key)) {
-                $generatedRows = $this->generateRows(Range::from($key), $key, $row);
-                $modifiedRows += $generatedRows;
-                continue;
-            }
-            $modifiedRows[$key] = $rows[$key];
-        }
-
-        return $modifiedRows;
-    }
-
-    private function generateRows(Range $range, string $key, array $row)
-    {
         $generatedRows = [];
-        foreach ($range->generate() as $current) {
-            $generatedKey = str_replace($range->expression(), $current, $key);
-            $generatedRows[$generatedKey] = $row;
+        foreach ($rows as $identifier => $row) {
+            $generatedRows = $this->generateRowsIfNeeded($identifier, $row, $generatedRows);
         }
         return $generatedRows;
+    }
+
+    private function generateRowsIfNeeded($identifier, $row, $rows): array
+    {
+        if (Range::isRange($identifier)) {
+            $rows += Range::from($identifier)->generate($row, $identifier);
+        } else {
+            $rows[$identifier] = $row;
+        }
+        return $rows;
     }
 }

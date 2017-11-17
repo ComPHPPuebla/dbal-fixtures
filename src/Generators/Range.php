@@ -11,7 +11,7 @@ class Range
     private const RANGE_PATTERN = '/\[(\d*)\.\.(\d+)\]/i';
 
     /** @var string */
-    private $expression;
+    private $definition;
 
     /** @var int */
     private $start;
@@ -19,8 +19,13 @@ class Range
     /** @var int */
     private $end;
 
+    public static function isRange(string $definition): bool
+    {
+        return 1 === preg_match(self::RANGE_PATTERN, $definition);
+    }
+
     /**
-     * Create a range from an expression with the form "[start..end]"
+     * Create a range from a definition with the form "[start..end]"
      *
      * @throws InvalidRange If the final value is not greater than the initial value
      */
@@ -28,37 +33,24 @@ class Range
     {
         $matches = [];
         preg_match(self::RANGE_PATTERN, $text, $matches);
-        [$expression, $start, $end] = $matches;
+        [$definition, $start, $end] = $matches;
 
-        return new Range($expression, $start, $end);
+        return new Range($definition, $start, $end);
     }
 
-    /**
-     * The pattern used to create this range "[start..end]"
-     *
-     * This text representation is used to build the identifier for the row
-     *
-     * @see RangeGenerator#generateRows
-     */
-    public function expression(): string
+    public function generate(array $row, string $rangeIdentifier): array
     {
-        return $this->expression;
-    }
-
-    public function generate(): array
-    {
-        return range($this->start, $this->end);
-    }
-
-    public static function isRange(string $expression): bool
-    {
-        return 1 === preg_match(self::RANGE_PATTERN, $expression);
+        $generatedRows = [];
+        foreach (range($this->start, $this->end) as $i) {
+            $generatedRows[$this->buildRowIdentifier($rangeIdentifier, $i)] = $row;
+        }
+        return $generatedRows;
     }
 
     private function __construct(string $expression, int $start, int $end)
     {
         $this->setRange($start, $end);
-        $this->expression = $expression;
+        $this->definition = $expression;
     }
 
     /**
@@ -70,5 +62,10 @@ class Range
 
         $this->start = $start;
         $this->end = $end;
+    }
+
+    private function buildRowIdentifier(string $identifier, int $i): string
+    {
+        return str_replace($this->definition, $i, $identifier);
     }
 }
