@@ -8,7 +8,7 @@ namespace ComPHPPuebla\Fixtures\Generators;
 
 class Range
 {
-    private const RANGE_REGEXP = '/\[(\d*)\.\.(\d+)\]/i';
+    private const RANGE_PATTERN = '/\[(\d*)\.\.(\d+)\]/i';
 
     /** @var string */
     private $expression;
@@ -19,6 +19,27 @@ class Range
     /** @var int */
     private $end;
 
+    /**
+     * Create a range from an expression with the form "[start..end]"
+     *
+     * @throws InvalidRange If the final value is not greater than the initial value
+     */
+    public static function from(string $text): Range
+    {
+        $matches = [];
+        preg_match(self::RANGE_PATTERN, $text, $matches);
+        [$expression, $start, $end] = $matches;
+
+        return new Range($expression, $start, $end);
+    }
+
+    /**
+     * The pattern used to create this range "[start..end]"
+     *
+     * This text representation is used to build the identifier for the row
+     *
+     * @see RangeGenerator#generateRows
+     */
     public function expression(): string
     {
         return $this->expression;
@@ -29,24 +50,15 @@ class Range
         return range($this->start, $this->end);
     }
 
-    public static function from($text): Range
-    {
-        $matches = [];
-        preg_match(self::RANGE_REGEXP, $text, $matches);
-        [$expression, $start, $end] = $matches;
-
-        return new Range($expression, $start, $end);
-    }
-
     public static function isRange(string $expression): bool
     {
-        return 1 === preg_match(self::RANGE_REGEXP, $expression);
+        return 1 === preg_match(self::RANGE_PATTERN, $expression);
     }
 
     private function __construct(string $expression, int $start, int $end)
     {
-        $this->expression = $expression;
         $this->setRange($start, $end);
+        $this->expression = $expression;
     }
 
     /**

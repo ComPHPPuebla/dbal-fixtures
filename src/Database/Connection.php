@@ -6,11 +6,11 @@
  */
 namespace ComPHPPuebla\Fixtures\Database;
 
-/**
- * Insert the given row to a database
- */
 interface Connection
 {
+    /**
+     * It assigns the auto generated ID to the row if any
+     */
     public function insert(string $table, Row $row): void;
 
     public function getPrimaryKeyOf(string $table): string;

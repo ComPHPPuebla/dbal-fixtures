@@ -24,6 +24,23 @@ class DBALConnection implements Connection
         $row->assignId($this->connection->lastInsertId());
     }
 
+    public function getPrimaryKeyOf(string $table): string
+    {
+        $schema = $this->connection->getSchemaManager();
+        return $schema->listTableDetails($table)->getPrimaryKeyColumns()[0];
+    }
+
+    /**
+     * Use this method for types not supported by default by DBAL, like MySQL enums. For instance:
+     *
+     * `$connections->registerPlatformType('enum', 'string');`
+     */
+    public function registerPlatformType(string $platformType, string $dbalType)
+    {
+        $schema = $this->connection->getSchemaManager();
+        $schema->getDatabasePlatform()->registerDoctrineTypeMapping($platformType, $dbalType);
+    }
+
     private function quoteIdentifiers(array $row): array
     {
         $quoted = [];
@@ -31,17 +48,5 @@ class DBALConnection implements Connection
             $quoted[$this->connection->quoteIdentifier($column)] = $value;
         }
         return $quoted;
-    }
-
-    public function getPrimaryKeyOf(string $table): string
-    {
-        $schema = $this->connection->getSchemaManager();
-        return $schema->listTableDetails($table)->getPrimaryKeyColumns()[0];
-    }
-
-    public function registerPlatformType(string $platformType, string $dbalType)
-    {
-        $schema = $this->connection->getSchemaManager();
-        $schema->getDatabasePlatform()->registerDoctrineTypeMapping($platformType, $dbalType);
     }
 }

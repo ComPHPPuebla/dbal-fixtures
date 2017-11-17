@@ -24,6 +24,9 @@ class Row
         $this->values = $values;
     }
 
+    /**
+     * It will skip the assignment if there's already a value for the primary key column
+     */
     public function assignId(int $id): void
     {
         if (isset($this->values[$this->primaryKeyColumn])) {
@@ -34,7 +37,7 @@ class Row
     }
 
     /**
-     * @return mixed Most common types int (auto_increment) and string (uuid)
+     * @return mixed Most common types are: int (auto_increment) and string (uuid)
      */
     public function id()
     {
@@ -56,6 +59,9 @@ class Row
         $this->values[$column] = $value;
     }
 
+    /**
+     * It will return `null` if the column does not exists
+     */
     public function valueOf($column)
     {
         return $this->values[$column] ?? null;
