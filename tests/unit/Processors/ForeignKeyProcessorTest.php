@@ -21,7 +21,7 @@ class ForeignKeyProcessorTest extends TestCase
     public function it_parses_a_foreign_key()
     {
         $station = new Row('id', 'station_1', ['id' => 1]);
-        $this->processor->afterInsert($station);
+        $this->processor->addReference($station);
 
         $row = new Row('', '', [
             'comment' => 'El servicio es excelente',
@@ -38,7 +38,7 @@ class ForeignKeyProcessorTest extends TestCase
     public function it_replaces_several_times_the_same_key()
     {
         $station = new Row('id', 'station_1', ['id' => 1]);
-        $this->processor->afterInsert($station);
+        $this->processor->addReference($station);
 
         $firstComment = new Row('', '', [
             'comment' => 'El servicio es excelente',
@@ -70,8 +70,8 @@ class ForeignKeyProcessorTest extends TestCase
     {
         $firstStation = new Row('id', 'station_1', ['id' => 1]);
         $secondStation = new Row('id', 'station_2', ['id' => 2]);
-        $this->processor->afterInsert($firstStation);
-        $this->processor->afterInsert($secondStation);
+        $this->processor->addReference($firstStation);
+        $this->processor->addReference($secondStation);
 
         $firstComment = new Row('', '', [
             'comment' => 'El servicio es excelente',

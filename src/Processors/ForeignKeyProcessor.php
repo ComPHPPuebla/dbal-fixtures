@@ -29,12 +29,12 @@ class ForeignKeyProcessor implements PreProcessor, PostProcessor
 
     public function afterInsert(Row $row): void
     {
-        $this->addReference($row->identifier(), $row->id());
+        $this->addReference($row);
     }
 
-    private function addReference(string $identifier, $id)
+    public function addReference(Row $row)
     {
-        $this->references[$identifier] = $id;
+        $this->references[$row->identifier()] = $row->id();
     }
 
     /**
