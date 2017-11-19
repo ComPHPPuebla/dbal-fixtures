@@ -20,10 +20,10 @@ class FixtureTest extends TestCase
 
         $fixtures->load("$this->path/fixture.yml");
 
-        $station1 = $this->findStationNamed('CASMEN GASOL');
-        $station2 = $this->findStationNamed('COMBUSTIBLES JV');
-        $review1 = $this->findReviewRatedWith(5);
-        $review2 = $this->findReviewRatedWith(1);
+        $station1 = $this->database->findStationNamed('CASMEN GASOL');
+        $station2 = $this->database->findStationNamed('COMBUSTIBLES JV');
+        $review1 = $this->database->findReviewRatedWith(5);
+        $review2 = $this->database->findReviewRatedWith(1);
 
         // Stations have been saved
         $this->assertGreaterThan(0, $station1['station_id']);
@@ -41,8 +41,8 @@ class FixtureTest extends TestCase
 
         $fixtures->load("$this->path/fixture-faker.yml");
 
-        $station = $this->findStationNamed('CASMEN GASOL');
-        $reviews = $this->findAllReviews();
+        $station = $this->database->findStationNamed('CASMEN GASOL');
+        $reviews = $this->database->findAllReviews();
 
         // Station has been saved
         $this->assertGreaterThan(0, $station['station_id']);
@@ -66,10 +66,10 @@ class FixtureTest extends TestCase
 
         $fixtures->load("$this->path/fixture-all.yml");
 
-        $stations = $this->findAllStations();
-        $reviews = $this->findAllReviews();
+        $stations = $this->database->findAllStations();
+        $reviews = $this->database->findAllReviews();
 
-        // Station has been saved
+        // Stations have been saved
         $this->assertCount(3, $stations);
         $this->assertGreaterThan(0, $stations[0]['station_id']);
         $this->assertGreaterThan(0, $stations[1]['station_id']);
@@ -149,31 +149,11 @@ class FixtureTest extends TestCase
     {
         $this->path = __DIR__ . '/../../data/';
         $this->configureConnection();
+        $this->database = new TestDatabase($this->connection);
     }
 
-    private function findStationNamed(string $name): array
-    {
-        return $this->connection->executeQuery(
-            'SELECT * FROM stations WHERE name = ?', [$name]
-        )->fetch();
-    }
-
-    private function findReviewRatedWith(int $stars): array
-    {
-        return $this->connection->executeQuery(
-            'SELECT * FROM reviews WHERE stars = ?', [$stars]
-        )->fetch();
-    }
-
-    private function findAllReviews()
-    {
-        return $this->connection->executeQuery('SELECT * FROM reviews')->fetchAll();
-    }
-
-    private function findAllStations()
-    {
-        return $this->connection->executeQuery('SELECT * FROM stations')->fetchAll();
-    }
+    /** @var TestDatabase */
+    private $database;
 
     /** @var string */
     private $path;
