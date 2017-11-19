@@ -18,7 +18,7 @@ class LoadFixtureCommandTest extends TestCase
     use ProvidesConnection;
 
     /** @test */
-    function it_loads_a_fixture_file()
+    function it_loads_a_given_fixture_file_into_the_configured_database()
     {
         $command = new LoadFixtureCommand();
         $helperSet = new HelperSet();

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class RangeTest extends TestCase
 {
     /** @test */
-    function it_recognizes_a_range_expression()
+    function it_recognizes_a_valid_range_expression()
     {
         $this->assertTrue(Range::isRange('[1..10]'));
     }

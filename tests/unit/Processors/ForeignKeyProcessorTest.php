@@ -18,7 +18,7 @@ class ForeignKeyProcessorTest extends TestCase
     }
 
     /** @test */
-    public function it_parses_a_foreign_key()
+    public function it_replaces_a_reference_with_the_real_foreign_key_value()
     {
         $station = new Row('id', 'station_1', ['id' => 1]);
         $this->processor->addReference($station);
@@ -66,7 +66,7 @@ class ForeignKeyProcessorTest extends TestCase
     }
 
     /** @test */
-    public function it_replaces_several_keys()
+    public function it_replaces_several_keys_several_times()
     {
         $firstStation = new Row('id', 'station_1', ['id' => 1]);
         $secondStation = new Row('id', 'station_2', ['id' => 2]);
@@ -99,7 +99,7 @@ class ForeignKeyProcessorTest extends TestCase
     }
 
     /** @test */
-    public function it_ignores_entries_without_foreign_keys()
+    public function it_ignores_columns_without_foreign_keys()
     {
         $originalRow = new Row('', '', [
             'comment' => 'Excelente servicio',
@@ -113,7 +113,7 @@ class ForeignKeyProcessorTest extends TestCase
     }
 
     /** @test */
-    public function it_ignores_null_values()
+    public function it_ignores_columns_with_null_values()
     {
         $originalRow = new Row('', '', [
             'name' => 'admin',
@@ -127,7 +127,7 @@ class ForeignKeyProcessorTest extends TestCase
     }
 
     /** @test */
-    public function it_ignores_entries_with_empty_strings()
+    public function it_ignores_columns_with_empty_strings()
     {
         $originalRow = new Row('', '', [
             'comment' => '',

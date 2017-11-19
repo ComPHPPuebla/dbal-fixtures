@@ -120,7 +120,7 @@ class FixtureTest extends TestCase
     }
 
     /** @test */
-    public function it_does_not_override_non_auto_generated_ids()
+    public function it_does_not_overwrite_non_auto_generated_ids()
     {
         $fixtures = new Fixture(new DBALConnection($this->connection));
 
@@ -132,7 +132,7 @@ class FixtureTest extends TestCase
     }
 
     /** @test */
-    public function it_ignores_null_values_in_rows()
+    public function it_does_not_overwrite_null_values()
     {
         $fixtures = new Fixture(new DBALConnection($this->connection));
 

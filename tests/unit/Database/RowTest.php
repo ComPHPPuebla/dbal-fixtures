@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class RowTest extends TestCase
 {
     /** @test */
-    function it_gets_assigned_an_id()
+    function it_can_have_an_id_assigned_to_it()
     {
         $row = new Row('id', '', [] );
         $id = 1;
@@ -34,7 +34,7 @@ class RowTest extends TestCase
     }
 
     /** @test */
-    function it_has_access_to_the_column_values()
+    function it_has_access_to_its_column_values()
     {
         $originalValues = [
             'column_name_1' => 'value_1',
@@ -60,7 +60,7 @@ class RowTest extends TestCase
     }
 
     /** @test */
-    function it_changes_the_value_of_a_column()
+    function it_changes_the_value_of_one_of_its_columns()
     {
         $row = new Row('', '', [
             'column_name' => 'old_column_name',
@@ -72,7 +72,7 @@ class RowTest extends TestCase
     }
 
     /** @test */
-    function it_gets_the_value_of_a_specific_column()
+    function it_gets_the_value_of_one_of_its_columns()
     {
         $value = 'specific_value';
         $row = new Row('', '', [

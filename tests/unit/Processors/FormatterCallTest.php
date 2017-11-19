@@ -60,7 +60,7 @@ class FormatterCallTest extends TestCase
     }
 
     /** @test */
-    function it_calls_a_faker_processor_with_one_argument()
+    function it_calls_a_faker_formatter_with_one_argument()
     {
         $call = FormatterCall::from('${title(\'female\')}');
 
@@ -70,7 +70,7 @@ class FormatterCallTest extends TestCase
     }
 
     /** @test */
-    function it_calls_a_faker_processor_with_several_argument()
+    function it_calls_a_faker_formatter_with_several_arguments()
     {
         $call = FormatterCall::from('${imageUrl(100, 200, \'dogs\')}');
 

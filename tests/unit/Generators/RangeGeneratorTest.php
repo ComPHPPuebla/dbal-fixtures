@@ -17,7 +17,7 @@ class RangeGeneratorTest extends TestCase
     }
 
     /** @test */
-    function it_does_not_modify_rows_without_range_definitions()
+    function it_does_not_generate_rows_without_a_range_definition()
     {
         $rowsWithoutRanges = [
             'station_1' => [
