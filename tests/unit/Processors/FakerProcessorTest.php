@@ -9,60 +9,56 @@ namespace ComPHPPuebla\Fixtures\Processors;
 use ComPHPPuebla\Fixtures\Database\Row;
 use Faker\Generator;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 
 class FakerProcessorTest extends TestCase
 {
-    /** @test */
-    function it_process_a_row_with_a_formatter_with_no_arguments()
+    /** @before */
+    function createProcessor()
     {
-        $generator = $this->prophesize(Generator::class);
-        $processor = new FakerProcessor($generator->reveal());
+        $this->generator = $this->prophesize(Generator::class);
+        $this->processor = new FakerProcessor($this->generator->reveal());
+    }
+
+    /** @test */
+    function it_does_not_process_a_row_without_faker_formatter_definitions()
+    {
+        $row = new Row('', '', ['first_name' => 'No formatter here']);
+
+        $this->processor->beforeInsert($row);
+
+        $this->generator->format(Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
+    }
+
+    /** @test */
+    function it_process_a_row_with_a_single_faker_formatter()
+    {
         $row = new Row('', '', ['first_name' => '${firstName}']);
 
-        $processor->beforeInsert($row);
+        $this->processor->beforeInsert($row);
 
-        $generator->format('firstName', [])->shouldHaveBeenCalled();
+        $this->generator->format('firstName', [])->shouldHaveBeenCalled();
     }
 
     /** @test */
-    function it_process_a_row_with_a_formatter_with_one_argument()
+    function it_process_a_row_with_several_faker_formatters()
     {
-        $generator = $this->prophesize(Generator::class);
-        $processor = new FakerProcessor($generator->reveal());
-        $row = new Row('', '', ['title' => '${title(\'female\')}']);
-
-        $processor->beforeInsert($row);
-
-        $generator->format('title', ['female'])->shouldHaveBeenCalled();
-    }
-
-    /** @test */
-    function it_process_a_row_with_a_formatter_with_several_arguments()
-    {
-        $generator = $this->prophesize(Generator::class);
-        $processor = new FakerProcessor($generator->reveal());
-        $row = new Row('', '', ['image' => '${imageUrl(100, 200, \'dogs\')}']);
-
-        $processor->beforeInsert($row);
-
-        $generator->format('imageUrl', [100, 200, 'dogs'])->shouldHaveBeenCalled();
-    }
-
-    /** @test */
-    function it_process_several_rows_with_several_formatters_with_several_arguments()
-    {
-        $generator = $this->prophesize(Generator::class);
-        $processor = new FakerProcessor($generator->reveal());
         $row = new Row('', '', [
             'first_name' => '${firstName}',
             'title' => '${title(\'female\')}',
             'image' => '${imageUrl(100, 200, \'dogs\')}'
         ]);
 
-        $processor->beforeInsert($row);
+        $this->processor->beforeInsert($row);
 
-        $generator->format('firstName', [])->shouldHaveBeenCalled();
-        $generator->format('title', ['female'])->shouldHaveBeenCalled();
-        $generator->format('imageUrl', [100, 200, 'dogs'])->shouldHaveBeenCalled();
+        $this->generator->format('firstName', [])->shouldHaveBeenCalled();
+        $this->generator->format('title', ['female'])->shouldHaveBeenCalled();
+        $this->generator->format('imageUrl', [100, 200, 'dogs'])->shouldHaveBeenCalled();
     }
+
+    /** @var FakerProcessor */
+    private $processor;
+
+    /** @var Generator */
+    private $generator;
 }
