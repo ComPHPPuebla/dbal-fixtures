@@ -35,3 +35,7 @@
 
 * Fixed issue with `ForeingKeyProcessor#isReference`. It failed to identify references
   in empty entries. See [#3](https://github.com/ComPHPPuebla/dbal-fixtures/issues/3)
+
+## 4.0.0 - 2018-01-23
+
+* Update Symfony components to v4
