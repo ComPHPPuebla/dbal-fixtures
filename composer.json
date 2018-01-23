@@ -1,6 +1,6 @@
 {
     "name": "comphppuebla/dbal-fixtures",
-    "description": "Fixtures managament with Doctrine DBAL",
+    "description": "Fixtures management with Doctrine DBAL",
     "license": "MIT",
     "authors": [
         {
@@ -12,8 +12,8 @@
     "require": {
         "php": ">=7.1",
         "doctrine/dbal": "^2.5",
-        "symfony/console": "^3.1",
-        "symfony/yaml": "^3.1",
+        "symfony/console": "^4.0",
+        "symfony/yaml": "^4.0",
         "fzaninotto/faker": "^1.6"
     },
     "require-dev": {
