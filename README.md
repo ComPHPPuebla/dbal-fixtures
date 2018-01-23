@@ -19,7 +19,7 @@ $ composer require comphppuebla/dbal-fixtures
 
 ## Documentation
 
-The documentation is available at 
+The documentation is available at
 [https://comphppuebla.github.io/dbal-fixtures/][1]
 
 ## Tests
