@@ -12,12 +12,20 @@
     "require": {
         "php": ">=7.1",
         "doctrine/dbal": "^2.5",
+        "fzaninotto/faker": "^1.6",
         "symfony/console": "^4.0",
-        "symfony/yaml": "^4.0",
-        "fzaninotto/faker": "^1.6"
+        "symfony/yaml": "^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.1.x-dev"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -33,9 +41,6 @@
             ]
         }
     },
-    "config": {
-        "bin-dir": "bin"
-    },
     "scripts": {
         "post-install-cmd": [
             "chmod u+x bin/cli"
@@ -43,10 +48,5 @@
         "post-update-cmd": [
             "chmod u+x bin/cli"
         ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.1.x-dev"
-        }
     }
 }
