@@ -42,7 +42,7 @@ class DBALConnectionTest extends TestCase
     {
         $connection = new DBALConnection($this->connection);
 
-        $primaryKeyColumn = $connection->getPrimaryKeyOf('states');
+        $primaryKeyColumn = $connection->primaryKeyOf('states');
 
         $this->assertEquals('url', $primaryKeyColumn);
     }

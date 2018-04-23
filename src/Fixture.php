@@ -85,7 +85,7 @@ class Fixture
 
     private function processTableRows(string $table, array $rows): void
     {
-        $primaryKey = $this->connection->getPrimaryKeyOf($table);
+        $primaryKey = $this->connection->primaryKeyOf($table);
         $generatedRows = $this->generator->generate($rows);
         foreach ($generatedRows as $identifier => $row) {
             $this->processRow($table, new Row($primaryKey, $identifier, $row));

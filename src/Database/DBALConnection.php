@@ -11,7 +11,7 @@ use Doctrine\DBAL\Connection as DbConnection;
 class DBALConnection implements Connection
 {
     /** @var DbConnection */
-    protected $connection;
+    private $connection;
 
     public function __construct(DbConnection $connection)
     {
@@ -24,7 +24,13 @@ class DBALConnection implements Connection
         $row->assignId($this->connection->lastInsertId());
     }
 
-    public function getPrimaryKeyOf(string $table): string
+    /**
+     * This method is needed in order to keep track of references to other rows in the fixtures
+     *
+     * @see \ComPHPPuebla\Fixtures\Fixture::processTableRows
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function primaryKeyOf(string $table): string
     {
         $schema = $this->connection->getSchemaManager();
         return $schema->listTableDetails($table)->getPrimaryKeyColumns()[0];
@@ -33,9 +39,11 @@ class DBALConnection implements Connection
     /**
      * Use this method for types not supported by default by DBAL, like MySQL enums. For instance:
      *
-     * `$connections->registerPlatformType('enum', 'string');`
+     * `$connection->registerPlatformType('enum', 'string');`
+     *
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function registerPlatformType(string $platformType, string $dbalType)
+    public function registerPlatformType(string $platformType, string $dbalType): void
     {
         $schema = $this->connection->getSchemaManager();
         $schema->getDatabasePlatform()->registerDoctrineTypeMapping($platformType, $dbalType);

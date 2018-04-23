@@ -13,5 +13,8 @@ interface Connection
      */
     public function insert(string $table, Row $row): void;
 
-    public function getPrimaryKeyOf(string $table): string;
+    /**
+     * Gets the column name of the table's primary key
+     */
+    public function primaryKeyOf(string $table): string;
 }
