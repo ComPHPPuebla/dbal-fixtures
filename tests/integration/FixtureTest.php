@@ -11,19 +11,24 @@ use PHPUnit\Framework\TestCase;
 
 class FixtureTest extends TestCase
 {
-    use ProvidesConnection;
+    use ProvidesConnections;
 
-    /** @test */
-    public function it_persists_fixtures_with_references()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    public function it_persists_fixtures_with_references(ConnectionFactory $factory)
     {
-        $fixtures = new Fixture(new DBALConnection($this->connection));
+        $connection = $factory->connect();
+        $fixtures = new Fixture(new DBALConnection($connection));
+        $database = new TestDatabase($connection);
 
         $fixtures->load("$this->path/fixture.yml");
 
-        $station1 = $this->database->findStationNamed('CASMEN GASOL');
-        $station2 = $this->database->findStationNamed('COMBUSTIBLES JV');
-        $review1 = $this->database->findReviewRatedWith(5);
-        $review2 = $this->database->findReviewRatedWith(1);
+        $station1 = $database->findStationNamed('CASMEN GASOL');
+        $station2 = $database->findStationNamed('COMBUSTIBLES JV');
+        $review1 = $database->findReviewRatedWith(5);
+        $review2 = $database->findReviewRatedWith(1);
 
         // Stations have been saved
         $this->assertGreaterThan(0, $station1['station_id']);
@@ -34,15 +39,20 @@ class FixtureTest extends TestCase
         $this->assertEquals($station1['station_id'], $review2['station_id']);
     }
 
-    /** @test */
-    public function it_persists_fixtures_with_references_and_fake_data()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    public function it_persists_fixtures_with_references_and_fake_data(ConnectionFactory $factory)
     {
-        $fixtures = new Fixture(new DBALConnection($this->connection));
+        $connection = $factory->connect();
+        $fixtures = new Fixture(new DBALConnection($connection));
+        $database = new TestDatabase($connection);
 
         $fixtures->load("$this->path/fixture-faker.yml");
 
-        $station = $this->database->findStationNamed('CASMEN GASOL');
-        $reviews = $this->database->findAllReviews();
+        $station = $database->findStationNamed('CASMEN GASOL');
+        $reviews = $database->findAllReviews();
 
         // Station has been saved
         $this->assertGreaterThan(0, $station['station_id']);
@@ -59,15 +69,20 @@ class FixtureTest extends TestCase
         $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[1]['stars']);
     }
 
-    /** @test */
-    public function it_persists_fixtures_with_generated_rows_references_and_fake_data()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    public function it_persists_fixtures_with_generated_rows_references_and_fake_data(ConnectionFactory $factory)
     {
-        $fixtures = new Fixture(new DBALConnection($this->connection));
+        $connection = $factory->connect();
+        $fixtures = new Fixture(new DBALConnection($connection));
+        $database = new TestDatabase($connection);
 
         $fixtures->load("$this->path/fixture-all.yml");
 
-        $stations = $this->database->findAllStations();
-        $reviews = $this->database->findAllReviews();
+        $stations = $database->findAllStations();
+        $reviews = $database->findAllReviews();
 
         // Stations have been saved
         $this->assertCount(3, $stations);
@@ -99,10 +114,13 @@ class FixtureTest extends TestCase
         $this->assertNotEquals('${numberBetween(1, 5)}', $reviews[4]['stars']);
     }
 
-    /** @test */
-    public function it_has_access_to_the_inserted_rows()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    public function it_has_access_to_the_inserted_rows(ConnectionFactory $factory)
     {
-        $fixtures = new Fixture(new DBALConnection($this->connection));
+        $fixtures = new Fixture(new DBALConnection($factory->connect()));
 
         $fixtures->load("$this->path/fixture.yml");
 
@@ -119,10 +137,13 @@ class FixtureTest extends TestCase
         $this->assertInternalType('int', $insertedRows['review_2']['review_id']);
     }
 
-    /** @test */
-    public function it_does_not_overwrite_non_auto_generated_ids()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    public function it_does_not_overwrite_non_auto_generated_ids(ConnectionFactory $factory)
     {
-        $fixtures = new Fixture(new DBALConnection($this->connection));
+        $fixtures = new Fixture(new DBALConnection($factory->connect()));
 
         $fixtures->load("$this->path/fixture-with-id.yml");
 
@@ -131,10 +152,13 @@ class FixtureTest extends TestCase
         $this->assertEquals('puebla', $insertedRows['state_1']['url']);
     }
 
-    /** @test */
-    public function it_does_not_overwrite_null_values()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    public function it_does_not_overwrite_null_values(ConnectionFactory $factory)
     {
-        $fixtures = new Fixture(new DBALConnection($this->connection));
+        $fixtures = new Fixture(new DBALConnection($factory->connect()));
 
         $fixtures->load("$this->path/fixture-with-nulls.yml");
 
@@ -148,12 +172,7 @@ class FixtureTest extends TestCase
     protected function configureFixtures(): void
     {
         $this->path = __DIR__ . '/../../data/';
-        $this->configureConnection();
-        $this->database = new TestDatabase($this->connection);
     }
-
-    /** @var TestDatabase */
-    private $database;
 
     /** @var string */
     private $path;

@@ -6,7 +6,8 @@
  */
 namespace ComPHPPuebla\Fixtures\Commands;
 
-use ComPHPPuebla\Fixtures\ProvidesConnection;
+use ComPHPPuebla\Fixtures\ConnectionFactory;
+use ComPHPPuebla\Fixtures\ProvidesConnections;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -15,18 +16,19 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class LoadFixtureCommandTest extends TestCase
 {
-    use ProvidesConnection;
+    use ProvidesConnections;
 
-    /** @test */
-    function it_loads_a_given_fixture_file_into_the_configured_database()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    function it_loads_a_given_fixture_file_into_the_configured_database(ConnectionFactory $factory)
     {
         $command = new LoadFixtureCommand();
         $helperSet = new HelperSet();
-        $helperSet->set(new ConnectionHelper($this->connection), 'db');
+        $helperSet->set(new ConnectionHelper($factory->connect()), 'db');
         $command->setHelperSet($helperSet);
-        $input = new ArrayInput([
-            'file' => __DIR__ . '/../../../data/fixture-all.yml',
-        ]);
+        $input = new ArrayInput(['file' => __DIR__ . '/../../../data/fixture-all.yml']);
         $output = new BufferedOutput();
 
         $statusCode = $command->run($input, $output);

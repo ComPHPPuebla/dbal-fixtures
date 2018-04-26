@@ -6,17 +6,21 @@
  */
 namespace ComPHPPuebla\Fixtures\Database;
 
-use ComPHPPuebla\Fixtures\ProvidesConnection;
+use ComPHPPuebla\Fixtures\ConnectionFactory;
+use ComPHPPuebla\Fixtures\ProvidesConnections;
 use PHPUnit\Framework\TestCase;
 
 class DBALConnectionTest extends TestCase
 {
-    use ProvidesConnection;
+    use ProvidesConnections;
 
-    /** @test */
-    function it_inserts_a_row_into_a_given_table()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    function it_inserts_a_row_into_a_given_table(ConnectionFactory $factory)
     {
-        $connection = new DBALConnection($this->connection);
+        $connection = new DBALConnection($factory->connect());
         $values = [
             'name' => 'CASMEN GASOL',
             'social_reason' => 'CASMEN SA CV',
@@ -37,10 +41,13 @@ class DBALConnectionTest extends TestCase
         $this->assertArraySubset($values, $station->values());
     }
 
-    /** @test */
-    function it_gets_the_primary_key_column_of_a_given_table()
+    /**
+     * @test
+     * @dataProvider databaseConnections
+     */
+    function it_gets_the_primary_key_column_of_a_given_table(ConnectionFactory $factory)
     {
-        $connection = new DBALConnection($this->connection);
+        $connection = new DBALConnection($factory->connect());
 
         $primaryKeyColumn = $connection->primaryKeyOf('states');
 
