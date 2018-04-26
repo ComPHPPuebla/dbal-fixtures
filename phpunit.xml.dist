@@ -19,4 +19,8 @@
            <directory>tests/integration</directory>
        </testsuite>
     </testsuites>
+    <php>
+        <env name="user" value="root"/>
+        <env name="password" value=""/>
+    </php>
 </phpunit>

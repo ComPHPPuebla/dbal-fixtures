@@ -12,6 +12,7 @@ trait ProvidesConnections
     {
         return [
             'SQLite' => [new SQLiteConnectionFactory()],
+            'MySQL' => [new MySQLConnectionFactory()],
         ];
     }
 }
