@@ -20,8 +20,8 @@ class SQLiteConnectionFactory implements ConnectionFactory
             passthru("rm $databasePath");
             passthru("touch $databasePath");
         }
-        passthru("sqlite3 $databasePath < $path/database.sql");
+        passthru("sqlite3 $databasePath < $path/sqlite-database.sql");
 
-        return DriverManager::getConnection(require __DIR__ . '/../../config/connection.config.php');
+        return DriverManager::getConnection(require __DIR__ . '/../../config/sqlite.config.php');
     }
 }

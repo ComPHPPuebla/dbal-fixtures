@@ -15,7 +15,7 @@ use ComPHPPuebla\Fixtures\Commands\LoadFixtureCommand;
 $cli = new Application('DBAL Fixtures CLI', '3.0.0');
 $cli->setCatchExceptions(true);
 
-$connection = DriverManager::getConnection(require __DIR__ . '/../config/connection.config.php');
+$connection = DriverManager::getConnection(require __DIR__ . '/../config/sqlite.config.php');
 
 $helperSet = new HelperSet();
 $helperSet->set(new ConnectionHelper($connection), 'db');
