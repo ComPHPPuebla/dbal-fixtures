@@ -79,6 +79,23 @@ class FormatterCallTest extends TestCase
         $this->generator->format('imageUrl', [100, 200, 'dogs'])->shouldHaveBeenCalled();
     }
 
+    /** @test */
+    function it_calls_2_faker_formatters()
+    {
+        $value = '`PointFromText(\'POINT(${latitude} ${longitude})\')`';
+
+        $this->generator->format('latitude', [])->willReturn(51.8939035);
+        $this->generator->format('longitude', [])->willReturn(4.5231352);
+
+        $call = FormatterCall::from($value);
+        $value = $call->run($this->generator->reveal());
+
+        $call = FormatterCall::from($value);
+        $value = $call->run($this->generator->reveal());
+
+        $this->assertEquals('`PointFromText(\'POINT(51.8939035 4.5231352)\')`', $value);
+    }
+
     /** @var Generator */
     private $generator;
 }

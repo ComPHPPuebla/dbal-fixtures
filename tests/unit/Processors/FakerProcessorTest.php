@@ -41,6 +41,20 @@ class FakerProcessorTest extends TestCase
     }
 
     /** @test */
+    function it_process_a_row_with_2_formatters_within_a_function()
+    {
+        $row = new Row('', '', [
+            'coordinates' => '`PointFromText(\'POINT(${latitude} ${longitude})\')`'
+        ]);
+        $this->generator->format('latitude', [])->willReturn(51.8939035);
+        $this->generator->format('longitude', [])->willReturn(4.5231352);
+
+        $this->processor->beforeInsert($row);
+
+        $this->assertEquals('`PointFromText(\'POINT(51.8939035 4.5231352)\')`', $row->valueOf('coordinates'));
+    }
+
+    /** @test */
     function it_process_a_row_with_several_faker_formatters()
     {
         $row = new Row('', '', [

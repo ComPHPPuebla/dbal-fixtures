@@ -12,6 +12,12 @@ class FormatterCall
 {
     private const FORMATTER_PATTERN = '/\$\{(\w+)(?:\(([^\)]+)\))?\}/i';
 
+    /** @var string Original value */
+    private $definition;
+
+    /** @var string Original patter ${formatter(a1, a2, ... , an)} */
+    private $call;
+
     /** @var string */
     private $formatter;
 
@@ -21,9 +27,13 @@ class FormatterCall
     /**
      * It calls the formatter, on the given generator, with the arguments defined in this call object
      */
-    public function run(Generator $generator)
+    public function run(Generator $generator): string
     {
-        return $generator->format($this->formatter, $this->parseArguments());
+        return str_replace(
+            $this->call,
+            $generator->format($this->formatter, $this->parseArguments()),
+            $this->definition
+        );
     }
 
     /**
@@ -41,7 +51,8 @@ class FormatterCall
 
     private function __construct(string $definition)
     {
-        [$this->formatter, $this->arguments] = $this->parseDefinition($definition);
+        $this->definition = $definition;
+        [$this->call, $this->formatter, $this->arguments] = $this->parseDefinition($definition);
     }
 
     private function parseDefinition(string $definition): array
@@ -49,10 +60,8 @@ class FormatterCall
         $callDefinition = [];
         preg_match(self::FORMATTER_PATTERN, $definition, $callDefinition);
 
-        array_shift($callDefinition);
-
-        if (\count($callDefinition) === 1) {
-            $callDefinition[1] = '';
+        if (\count($callDefinition) === 2) {
+            $callDefinition[2] = '';
         }
 
         return $callDefinition;
