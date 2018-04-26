@@ -36,7 +36,7 @@ class Insert
     {
         $parameters = [];
         foreach ($this->row->values() as $value) {
-            if ($value !== null && trim($value, '`') === $value) {
+            if (is_numeric($value) || trim($value, '`') === $value) {
                 $parameters[] = $value;
             }
         }

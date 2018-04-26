@@ -60,4 +60,24 @@ class InsertTest extends TestCase
         $this->assertCount(1, $insert->parameters());
         $this->assertEquals('Excellent!', $insert->parameters()[0]);
     }
+
+    /** @test */
+    function it_converts_to_sql_an_insert_with_numeric_values()
+    {
+        $insert = Insert::into('reviews', new Row('id', 1, [
+            'content' => 'Excellent!',
+            'date' => '`CURDATE()`',
+            'rating' =>  5,
+        ]));
+
+        $sql = $insert->toSQL($this->connection->reveal());
+
+        $this->assertEquals(
+            'INSERT INTO reviews (`content`, `date`, `rating`) VALUES (?, CURDATE(), ?)',
+            $sql
+        );
+        $this->assertCount(2, $insert->parameters());
+        $this->assertEquals('Excellent!', $insert->parameters()[0]);
+        $this->assertEquals(5, $insert->parameters()[1]);
+    }
 }
