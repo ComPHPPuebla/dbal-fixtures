@@ -18,9 +18,13 @@ class DBALConnection implements Connection
         $this->connection = $connection;
     }
 
+    /** @throws \Doctrine\DBAL\DBALException */
     public function insert(string $table, Row $row): void
     {
-        $this->connection->insert($table, $this->quoteIdentifiers($row->values()));
+        $insert = Insert::into($table, $row);
+
+        $this->connection->executeUpdate($insert->toSQL($this->connection), $insert->parameters());
+
         $row->assignId($this->connection->lastInsertId());
     }
 

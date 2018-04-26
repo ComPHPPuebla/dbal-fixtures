@@ -66,4 +66,22 @@ class Row
     {
         return $this->values[$column] ?? null;
     }
+
+    public function columns(): array
+    {
+        return array_keys($this->values);
+    }
+
+    public function placeholders(): array
+    {
+        $placeholders = [];
+        foreach ($this->values as $column => $value) {
+            if (trim($value, '`') === $value) {
+                $placeholders[$column] = '?';
+            } else {
+                $placeholders[$column] = $value === null ? 'null' : trim($value, '`');
+            }
+        }
+        return $placeholders;
+    }
 }
