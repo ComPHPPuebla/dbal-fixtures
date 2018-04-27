@@ -67,6 +67,16 @@
                                             Fake data
                                         </a>
                                     </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/sql-functions.html">
+                                            SQL functions
+                                        </a>
+                                    </li>
+                                                                    <li class="">
+                                        <a href="https://comphppuebla.github.io/dbal-fixtures/docs/platform-types.html">
+                                            Platform types
+                                        </a>
+                                    </li>
                                                             </ul>
                                                     <p class="text-muted">
                                 Examples
@@ -95,7 +105,7 @@
 <li>Create the sample SQLite database</li>
 </ol>
 <pre><code class="language-bash">$ sqlite3 test_db.sq3 &lt; data/database.sql</code></pre>
-<ol start="2">
+<ol>
 <li>Save the following fixture in a file name <code>stations.yml</code>.</li>
 </ol>
 <pre><code class="language-yaml">stations:
@@ -122,11 +132,11 @@ reviews:
         comment: "El servicio es excelente"
         stars: 5
         station_id: "@station_3"</code></pre>
-<ol start="3">
+<ol>
 <li>Use the following code to load the fixture in a file named <code>loader.php</code>.</li>
 </ol>
 <pre><code class="language-php">use Doctrine\DBAL\DriverManager;
-use ComPHPPuebla\Fixtures\Connections\DBALConnection;
+use ComPHPPuebla\Fixtures\Database\DBALConnection;
 use ComPHPPuebla\Fixtures\Fixture;
 
 $connection = DriverManager::getConnection([
@@ -136,11 +146,11 @@ $connection = DriverManager::getConnection([
 
 $fixture = new Fixture(new DBALConnection($connection));
 $fixture-&gt;load('fixture.yml');</code></pre>
-<ol start="4">
+<ol>
 <li>Run the PHP file</li>
 </ol>
 <pre><code class="language-bash">$ php loader.php</code></pre>
-<ol start="5">
+<ol>
 <li>Verify that you have 3 stations, the first one with 2 reviews, the second
 one with 3 reviews, and the third one with only one review. Columns starting
 with a <code>$</code> should have random fake data.</li>

@@ -99,30 +99,26 @@
 
                 
                 <section class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
-                    <h1 id="foreign-keys">Foreign keys</h1>
-<p>You can <strong>refer</strong> to a previously inserted row by using the <code>@</code> symbol followed by the
-row identifier. </p>
-<p>The following example will insert 2 rows:</p>
-<ul>
-<li>One in the table <code>stations</code> and </li>
-<li>another one in the table <code>comments</code>, using the foreign key <code>station_id</code>. </li>
-</ul>
-<p>In this case the relationship is determined by using <code>@station_1</code> as the value for
-the column <code>station_id</code> in <code>comments</code>.</p>
-<pre><code class="language-yaml">stations:
-    station_1:
-        name: "CASMEN GASOL"
-        social_reason: "CASMEN SA CV"
-        address_line_1: "23 PTE NO 711"
-        address_line_2: "EL CARMEN"
-        location: "PUEBLA PUE"
-        latitude: 19.03817
-        longitude: -98.20737
-reviews:
-    review_1:
-        comment: "El servicio es excelente"
-        stars: 5
-        station_id: "@station_1"</code></pre>
+                    <h1 id="platform-types">Platform types</h1>
+<p>There are some platform specific types that are not supported by default by DBAL.
+If you want, for instance, use MySQL's <code>ENUM</code> or <code>POINT</code> you'll need to register them.</p>
+<p>In some cases like <code>ENUM</code> we can simply alias the type to an existing one like <code>string</code></p>
+<pre><code class="language-php">&lt;?php
+$connection = new DBALConnection(DriverManager::getConnection(['url' =&gt; $dsn]));
+$connection-&gt;registerPlatformType('enum', 'string');
+$fixture = new Fixture($connection);</code></pre>
+<p>In some other cases we will need to process the value before using it in our tests.
+A good example is MySQL's <code>POINT</code>.
+You can register it and use <code>string</code> for it.
+But when queried the result will be unreadable.
+And you will need some processing before being able to use it.
+For the <code>POINT</code> type we can use PHP's <code>unpack</code> function.</p>
+<pre><code class="language-php">$connection = DriverManager::getConnection(['url' =&gt; $dsn]);
+$location = $connection-&gt;executeQuery('SELECT * FROM locations WHERE id = ?', [$id])-&gt;fetch();
+$coordinates = unpack('x/x/x/x/corder/Ltype/dlat/dlon', $location['coordinates']);
+
+echo "The latitude is {$coordinates['lat']}\n";
+echo "The longitude is {$coordinates['lon']}\n";</code></pre>
                 </section>
 
             </div>

@@ -99,30 +99,28 @@
 
                 
                 <section class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
-                    <h1 id="foreign-keys">Foreign keys</h1>
-<p>You can <strong>refer</strong> to a previously inserted row by using the <code>@</code> symbol followed by the
-row identifier. </p>
-<p>The following example will insert 2 rows:</p>
-<ul>
-<li>One in the table <code>stations</code> and </li>
-<li>another one in the table <code>comments</code>, using the foreign key <code>station_id</code>. </li>
-</ul>
-<p>In this case the relationship is determined by using <code>@station_1</code> as the value for
-the column <code>station_id</code> in <code>comments</code>.</p>
-<pre><code class="language-yaml">stations:
-    station_1:
-        name: "CASMEN GASOL"
-        social_reason: "CASMEN SA CV"
-        address_line_1: "23 PTE NO 711"
-        address_line_2: "EL CARMEN"
-        location: "PUEBLA PUE"
-        latitude: 19.03817
-        longitude: -98.20737
-reviews:
-    review_1:
-        comment: "El servicio es excelente"
-        stars: 5
-        station_id: "@station_1"</code></pre>
+                    <h1 id="sql-functions">SQL functions</h1>
+<p>It is possible to use SQL functions in your fixtures.
+A function call is delimited with backticks <strong>`</strong>.
+As shown in the following example:</p>
+<pre><code class="language-yml">posts:
+    post_1:
+        title: "Post title"
+        created_at: "`CURDATE()`"</code></pre>
+<p>This entry will produce the following insert statement</p>
+<pre><code class="language-sql">INSERT INTO posts (`title`, `created_at`) VALUES(?, CURDATE())</code></pre>
+<h2 id="combining-functions-with-fake-data-and-ranges">Combining functions with fake data and ranges</h2>
+<p>Say you want to produce 3 entries with random values for latitude and longitude.
+Suppose you're using MySQL's <code>POINT</code> data type.
+You would need to create an entry similar to the following one.</p>
+<pre><code class="language-yml">stations:
+    stations_[1..3]:
+        name: "${company}"
+        location: "`PointFromText('POINT(${latitude} ${longitude})')`"</code></pre>
+<p>This will produce 3 inserts, similar to the following ones</p>
+<pre><code class="language-sql">INSERT INTO stations(`name`, `location`) VALUES (?, PointFromText('POINT(-38.253882 -51.337622)'))
+INSERT INTO stations(`name`, `location`) VALUES (?, PointFromText('POINT(-36.253862 -58.337642)'))
+INSERT INTO stations(`name`, `location`) VALUES (?, PointFromText('POINT(-28.253182 -71.337222)'))</code></pre>
                 </section>
 
             </div>
