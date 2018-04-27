@@ -19,9 +19,8 @@ INSERT INTO posts (`title`, `created_at`) VALUES(?, CURDATE())
 
 ## Combining functions with fake data and ranges
 
-Say you want to produce 3 entries with random latitude and longitude.
+Say you want to produce 3 entries with random values for latitude and longitude.
 Suppose you're using MySQL's `POINT` data type.
-And that you want the latitude and longitude to be randomly generated.
 You would need to create an entry similar to the following one.
 
 ```yml
