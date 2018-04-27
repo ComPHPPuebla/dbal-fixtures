@@ -44,8 +44,7 @@ class Fixture
         Generator $generator = null,
         array $preProcessors = [],
         array $postProcessors = []
-    )
-    {
+    ) {
         $this->connection = $connection;
         $this->loader = $loader ?? new YamlLoader();
         $this->generator = $generator ?? new RangeGenerator();

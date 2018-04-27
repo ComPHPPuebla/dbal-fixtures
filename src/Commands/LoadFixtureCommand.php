@@ -8,7 +8,8 @@ namespace ComPHPPuebla\Fixtures\Commands;
 
 use ComPHPPuebla\Fixtures\Fixture;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\{InputInterface, InputArgument};
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use ComPHPPuebla\Fixtures\Database\DBALConnection;
 use InvalidArgumentException;
@@ -32,7 +33,8 @@ class LoadFixtureCommand extends Command
                      'File path of YAML file to be loaded.'
                  ),
              ])
-             ->setHelp(<<<HELP
+             ->setHelp(
+                 <<<HELP
 The <info>dbal:fixtures:create</info> command, loads a fixture in the configured database.
 HELP
         );

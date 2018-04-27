@@ -59,7 +59,9 @@ class Range
      */
     private function setRange(int $start, int $end): void
     {
-        if ($start > $end) throw InvalidRange::withValues($start, $end);
+        if ($start > $end) {
+            throw InvalidRange::withValues($start, $end);
+        }
 
         $this->start = $start;
         $this->end = $end;
