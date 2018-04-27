@@ -18,21 +18,31 @@ class TestDatabase
         $this->connection = $connection;
     }
 
+    /** @throws \Doctrine\DBAL\DBALException*/
     public function findStationNamed(string $name): array
     {
         return $this->connection->executeQuery('SELECT * FROM stations WHERE name = ?', [$name])->fetch();
     }
 
+    /** @throws \Doctrine\DBAL\DBALException*/
     public function findReviewRatedWith(int $stars): array
     {
         return $this->connection->executeQuery('SELECT * FROM reviews WHERE stars = ?', [$stars])->fetch();
     }
 
+    /** @throws \Doctrine\DBAL\DBALException*/
+    public function findLocationWithId(int $id): array
+    {
+        return $this->connection->executeQuery('SELECT * FROM locations WHERE id = ?', [$id])->fetch();
+    }
+
+    /** @throws \Doctrine\DBAL\DBALException*/
     public function findAllReviews(): array
     {
         return $this->connection->executeQuery('SELECT * FROM reviews')->fetchAll();
     }
 
+    /** @throws \Doctrine\DBAL\DBALException*/
     public function findAllStations(): array
     {
         return $this->connection->executeQuery('SELECT * FROM stations')->fetchAll();

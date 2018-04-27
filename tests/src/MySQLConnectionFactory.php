@@ -12,10 +12,11 @@ use Doctrine\DBAL\DriverManager;
 class MySQLConnectionFactory implements ConnectionFactory
 {
     /** @throws \Doctrine\DBAL\DBALException */
-    function connect(): Connection
+    function connect(string $file = null): Connection
     {
+        $sqlFile = $file ?? __DIR__ . '/../../data/mysql-database.sql';
         $connection = DriverManager::getConnection(require __DIR__ . '/../../config/mysql.config.php');
-        $statement = $connection->prepare(file_get_contents(__DIR__ . '/../../data/mysql-database.sql'));
+        $statement = $connection->prepare(file_get_contents($sqlFile));
         $statement->execute();
 
         return $connection;

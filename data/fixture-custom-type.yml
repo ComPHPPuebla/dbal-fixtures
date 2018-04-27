@@ -1,0 +1,4 @@
+locations:
+    location_1:
+        id: 1
+        coordinates: "`PointFromText('POINT(${latitude} ${longitude})')`"
