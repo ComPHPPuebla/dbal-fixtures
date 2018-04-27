@@ -28,6 +28,9 @@ menu:
         fake_data:
           text: Fake data
           relativeUrl: docs/fake-data.html
+        sql_functions:
+          text: SQL functions
+          relativeUrl: docs/sql-functions.html
     examples:
       name: Examples
       items:
