@@ -3,7 +3,7 @@ subTitle: Data fixtures generation without the ORM
 baseUrl: https://comphppuebla.github.io/dbal-fixtures
 template:
   url: https://github.com/CouscousPHP/Template-Dark
-index: index.md
+  index: index.md
 
 menu:
   sections:
@@ -31,6 +31,9 @@ menu:
         sql_functions:
           text: SQL functions
           relativeUrl: docs/sql-functions.html
+        platform_types:
+          text: Platform types
+          relativeUrl: docs/platform-types.html
     examples:
       name: Examples
       items:
