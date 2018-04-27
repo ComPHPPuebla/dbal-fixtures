@@ -1,10 +1,10 @@
 # Doctrine DBAL fixtures
 
-[![Build Status](https://travis-ci.org/ComPHPPuebla/dbal-fixtures.svg?branch=master)](https://travis-ci.org/ComPHPPuebla/dbal-fixtures)
-[![Latest Stable Version](https://poser.pugx.org/comphppuebla/dbal-fixtures/v/stable.svg)](https://packagist.org/packages/comphppuebla/dbal-fixtures)
-[![Latest Unstable Version](https://poser.pugx.org/comphppuebla/dbal-fixtures/v/unstable.svg)](https://packagist.org/packages/comphppuebla/dbal-fixtures)
-[![License](https://poser.pugx.org/comphppuebla/dbal-fixtures/license.svg)](https://packagist.org/packages/comphppuebla/dbal-fixtures)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d876000d-611d-473f-b58c-64582903f7a9/mini.png)](https://insight.sensiolabs.com/projects/d876000d-611d-473f-b58c-64582903f7a9)
+[![Build Status][travis-badge]][travis]
+[![Latest Stable Version][stable-badge]][composer]
+[![Latest Unstable Version][unstable-badge]][composer]
+[![License][license-badge]][license]
+[![SensioLabsInsight][sensiolabs-badge]][sensiolabs]
 
 Fixtures management using YAML files. It supports: foreign key references, and
 generation of fake data.
@@ -20,7 +20,7 @@ $ composer require comphppuebla/dbal-fixtures
 ## Documentation
 
 The documentation is available at
-[https://comphppuebla.github.io/dbal-fixtures/][1]
+[https://comphppuebla.github.io/dbal-fixtures/][docs]
 
 ## Tests
 
@@ -34,4 +34,13 @@ $ bin/phpunit --testdox
 
 Released under the [MIT License](LICENSE).
 
-[1]: https://comphppuebla.github.io/dbal-fixtures/
+[docs]: https://comphppuebla.github.io/dbal-fixtures/
+[travis]: https://travis-ci.org/ComPHPPuebla/dbal-fixtures
+[travis-badge]: https://travis-ci.org/ComPHPPuebla/dbal-fixtures.svg?branch=master
+[composer]: https://packagist.org/packages/comphppuebla/dbal-fixtures
+[stable-badge]: https://poser.pugx.org/comphppuebla/dbal-fixtures/v/stable.svg
+[unstable-badge]: https://poser.pugx.org/comphppuebla/dbal-fixtures/v/unstable.svg
+[license-badge]: https://poser.pugx.org/comphppuebla/dbal-fixtures/license.svg
+[license]: LICENSE
+[sensiolabs-badge]: https://insight.sensiolabs.com/projects/d876000d-611d-473f-b58c-64582903f7a9/mini.png
+[sensiolabs]: https://insight.sensiolabs.com/projects/d876000d-611d-473f-b58c-64582903f7a9
