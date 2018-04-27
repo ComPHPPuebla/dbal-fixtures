@@ -37,7 +37,7 @@ Please visit the [documentation page][docs] for more details.
 
 ## Contribute
 
-Please refer to [CONTRIBUTING](CONTRIBUTING) for information on how to contribute to this package.
+Please refer to [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute to this package.
 
 ## License
 
