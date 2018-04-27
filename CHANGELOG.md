@@ -39,3 +39,9 @@
 ## 4.0.0 - 2018-01-23
 
 * Update Symfony components to v4
+
+## 4.1.0 - 2018-04-27
+
+* Added ability to use SQL functions as values, for example `CURDATE()`.
+  See [#7](https://github.com/ComPHPPuebla/dbal-fixtures/issues/7) for a use case.
+  See the [documentation](https://comphppuebla.github.io/dbal-fixtures/docs/sql-functions.html) for more details
