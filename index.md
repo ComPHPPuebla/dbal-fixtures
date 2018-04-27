@@ -16,13 +16,9 @@ Install this package using composer
 $ composer require comphppuebla/dbal-fixtures
 ```
 
-## Tests
+## Contribute
 
-Run the test suite using PHPUnit:
-
-```bash
-$ bin/phpunit --testdox
-```
+Please refer to [CONTRIBUTING][contribute] for information on how to contribute to this package.
 
 ## License
 
@@ -37,3 +33,4 @@ Released under the [MIT License][license].
 [license]: https://github.com/ComPHPPuebla/dbal-fixtures/blob/master/LICENSE
 [sensiolabs-badge]: https://insight.sensiolabs.com/projects/d876000d-611d-473f-b58c-64582903f7a9/mini.png
 [sensiolabs]: https://insight.sensiolabs.com/projects/d876000d-611d-473f-b58c-64582903f7a9
+[contribute]: https://github.com/ComPHPPuebla/dbal-fixtures/blob/master/CONTRIBUTING.md
