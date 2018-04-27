@@ -47,6 +47,7 @@ class Range
         return $generatedRows;
     }
 
+    /** @throws InvalidRange */
     private function __construct(string $expression, int $start, int $end)
     {
         $this->setRange($start, $end);

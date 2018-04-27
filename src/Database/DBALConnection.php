@@ -52,13 +52,4 @@ class DBALConnection implements Connection
         $schema = $this->connection->getSchemaManager();
         $schema->getDatabasePlatform()->registerDoctrineTypeMapping($platformType, $dbalType);
     }
-
-    private function quoteIdentifiers(array $row): array
-    {
-        $quoted = [];
-        foreach ($row as $column => $value) {
-            $quoted[$this->connection->quoteIdentifier($column)] = $value;
-        }
-        return $quoted;
-    }
 }

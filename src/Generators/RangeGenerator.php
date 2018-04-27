@@ -13,6 +13,8 @@ class RangeGenerator implements Generator
      * of rows defined by the range
      *
      * It will ignore rows without range definitions
+     *
+     * @throws InvalidRange
      */
     public function generate(array $rows): array
     {
@@ -23,6 +25,7 @@ class RangeGenerator implements Generator
         return $generatedRows;
     }
 
+    /** @throws InvalidRange */
     private function generateRowsIfNeeded(string $identifier, array $row, array $rows): array
     {
         if (Range::isRange($identifier)) {
