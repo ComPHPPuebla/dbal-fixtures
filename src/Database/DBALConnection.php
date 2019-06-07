@@ -29,7 +29,10 @@ class DBALConnection implements Connection
 
         $this->connection->executeUpdate($insert->toSQL($this->connection), $insert->parameters());
 
-        $row->assignId(@$this->connection->lastInsertId());
+        try {
+            $id = $this->connection->lastInsertId();
+            $row->assignId($id);
+        } catch (\Exception $e) {};
     }
 
     /**
