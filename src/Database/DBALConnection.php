@@ -18,14 +18,21 @@ class DBALConnection implements Connection
         $this->connection = $connection;
     }
 
-    /** @throws \Doctrine\DBAL\DBALException */
+    /**
+     * @param string $table
+     * @param Row $row
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function insert(string $table, Row $row): void
     {
         $insert = Insert::into($table, $row);
 
         $this->connection->executeUpdate($insert->toSQL($this->connection), $insert->parameters());
 
-        $row->assignId($this->connection->lastInsertId());
+        try {
+            $id = $this->connection->lastInsertId();
+            $row->assignId($id);
+        } catch (\Exception $e) {};
     }
 
     /**

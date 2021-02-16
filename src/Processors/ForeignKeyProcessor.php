@@ -59,8 +59,9 @@ class ForeignKeyProcessor implements PreProcessor, PostProcessor
     /**
      * @return mixed
      */
-    private function parseKeyIfNeeded(string $value)
+    private function parseKeyIfNeeded($value)
     {
+        if (!is_scalar($value)) return $value;
         if ($this->isAReference($value) && $this->referenceExistsFor($value)) {
             return $this->references[substr($value, 1)];
         }
