@@ -32,6 +32,7 @@ class FakerProcessor implements PreProcessor
 
     private function generateFakeDataIfNeeded(Row $row, string $column, ?string $value): void
     {
+        if(!is_scalar($value)) return;
         $formatted = $value;
         while (FormatterCall::matches($formatted)) {
             $formatted = FormatterCall::from($formatted)->run($this->generator);

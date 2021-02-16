@@ -76,7 +76,7 @@ class Row
     {
         $placeholders = [];
         foreach ($this->values as $column => $value) {
-            if (is_numeric($value) || trim($value, '`') === $value) {
+            if (is_array($value) || is_numeric($value) || trim($value, '`') === $value) {
                 $placeholders[$column] = '?';
             } else {
                 $placeholders[$column] = $value === null ? 'null' : trim($value, '`');
